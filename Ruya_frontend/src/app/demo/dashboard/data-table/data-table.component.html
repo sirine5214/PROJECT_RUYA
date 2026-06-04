@@ -1,0 +1,109 @@
+<div class="card">
+  <div class="card-header">
+    <h5 class="card-title">Liste des Fichiers</h5>
+    <div class="filters-container">
+      <div class="filter-group">
+        <label>Date:</label>
+        <input type="date" [(ngModel)]="dateFilter" (change)="applyFilters()" class="form-control">
+      </div>
+      <div class="filter-group">
+        <label>Statut:</label>
+        <select [(ngModel)]="statutFilter" (change)="applyFilters()" class="form-control">
+          <option value="">Tous</option>
+          <option value="REMIS">REMIS</option>
+          <option value="REJET">REJET</option>
+          <option value="RENDU">RENDU</option>
+          <option value="EN_ATTENTE">EN ATTENTE</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Type:</label>
+        <select [(ngModel)]="typeFilter" (change)="applyFilters()" class="form-control">
+          <option value="">Tous</option>
+          <option value="cheque">Chèque</option>
+          <option value="prelevement">Prélèvement</option>
+          <option value="virement">Virement</option>
+          <option value="effet">Effet</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Recherche:</label>
+        <input type="text" [(ngModel)]="searchTerm" (input)="applyFilters()" placeholder="Nom fichier..." class="form-control">
+      </div>
+      <div class="filter-actions">
+        <button class="btn btn-secondary" (click)="reinitialiser()">
+          <i class="ti ti-refresh me-1"></i>
+          Réinitialiser
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th (click)="sort('nomFichier')" class="sortable">
+              Nom Fichier
+              <i class="ti" [ngClass]="getSortIcon('nomFichier')"></i>
+            </th>
+            <th (click)="sort('typeFichier')" class="sortable">
+              Type
+              <i class="ti" [ngClass]="getSortIcon('typeFichier')"></i>
+            </th>
+            <th (click)="sort('statut')" class="sortable">
+              Statut
+              <i class="ti" [ngClass]="getSortIcon('statut')"></i>
+            </th>
+            <th (click)="sort('montant')" class="sortable">
+              Montant
+              <i class="ti" [ngClass]="getSortIcon('montant')"></i>
+            </th>
+                         <th (click)="sort('createdAt')" class="sortable">
+               Date
+               <i class="ti" [ngClass]="getSortIcon('createdAt')"></i>
+             </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let fichier of displayedData" class="fichier-row">
+            <td>{{ fichier.nomFichier }}</td>
+            <td>
+              <span class="badge" [ngClass]="getTypeBadgeClass(fichier.typeFichier)">
+                {{ fichier.typeFichier }}
+              </span>
+            </td>
+            <td>
+              <span class="badge" [ngClass]="getStatutBadgeClass(getStatutFromCode(fichier.codeValeur))">
+                {{ getStatutFromCode(fichier.codeValeur) }}
+              </span>
+            </td>
+                         <td>{{ fichier.montant | number:'1.2-2' }} DT</td>
+             <td>{{ fichier.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <!-- Pagination -->
+    <div class="pagination-container">
+      <div class="pagination-info">
+        Affichage {{ (currentPage * itemsPerPage) + 1 }}-{{ Math.min((currentPage + 1) * itemsPerPage, totalItems) }} sur {{ totalItems }} résultats
+      </div>
+      <nav>
+        <ul class="pagination">
+          <li class="page-item" [class.disabled]="currentPage === 0">
+            <a class="page-link" (click)="changePage(currentPage - 1)">Précédent</a>
+          </li>
+          <li class="page-item" *ngFor="let page of getPageNumbers()" [class.active]="page === currentPage">
+            <a class="page-link" (click)="changePage(page)">{{ page + 1 }}</a>
+          </li>
+          <li class="page-item" [class.disabled]="currentPage === totalPages - 1">
+            <a class="page-link" (click)="changePage(currentPage + 1)">Suivant</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div> 

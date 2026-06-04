@@ -1,0 +1,335 @@
+// ============================================
+// 🎨 BROWN THEME OVERRIDES - RUya
+// ============================================
+// Ce fichier remplace toutes les couleurs violettes par des couleurs marron
+// dans toute l'application Angular
+
+// ============================================
+// 📌 VARIABLES PRINCIPALES
+// ============================================
+:root {
+  --bs-primary: #8b4513;
+  --bs-primary-rgb: 139, 69, 19;
+  --bs-secondary: #76380f;
+  --bs-secondary-rgb: 118, 56, 15;
+  
+  // Remplacer purple par brown
+  --bs-purple: #8b4513;
+  --bs-purple-rgb: 139, 69, 19;
+}
+
+// ============================================
+// 🎨 CLASSES UTILITAIRES BOOTSTRAP
+// ============================================
+
+// Backgrounds
+.bg-purple {
+  background-color: #8b4513 !important;
+}
+
+.bg-purple-100 {
+  background-color: #faf8f6 !important;
+}
+
+.bg-purple-500 {
+  background-color: #8b4513 !important;
+}
+
+.bg-purple-700 {
+  background-color: #76380f !important;
+}
+
+// Text colors
+.text-purple {
+  color: #8b4513 !important;
+}
+
+.text-purple-500 {
+  color: #8b4513 !important;
+}
+
+.text-purple-700 {
+  color: #76380f !important;
+}
+
+// Border colors
+.border-purple {
+  border-color: #8b4513 !important;
+}
+
+// Buttons
+.btn-purple {
+  background: linear-gradient(135deg, #8b4513 0%, #76380f 100%);
+  color: white;
+  border: none;
+  
+  &:hover {
+    background: linear-gradient(135deg, #a0521a 0%, #8b4513 100%);
+  }
+}
+
+.btn-outline-purple {
+  color: #8b4513;
+  border-color: #8b4513;
+  
+  &:hover {
+    background-color: #8b4513;
+    color: white;
+  }
+}
+
+// ============================================
+// 🎨 BADGES
+// ============================================
+.badge-purple,
+.badge.bg-purple {
+  background: linear-gradient(135deg, #8b4513 0%, #76380f 100%) !important;
+  color: white !important;
+}
+
+// ============================================
+// 🎨 LINKS
+// ============================================
+a {
+  &.text-purple {
+    color: #8b4513 !important;
+    
+    &:hover {
+      color: #76380f !important;
+    }
+  }
+}
+
+// ============================================
+// 🎨 ALERTS
+// ============================================
+.alert-purple {
+  background-color: rgba(139, 69, 19, 0.1);
+  border-color: #8b4513;
+  color: #5f2a0b;
+}
+
+// ============================================
+// 🎨 FORMS
+// ============================================
+.form-control:focus,
+.form-select:focus {
+  border-color: #8b4513;
+  box-shadow: 0 0 0 0.25rem rgba(139, 69, 19, 0.25);
+}
+
+.form-check-input:checked {
+  background-color: #8b4513;
+  border-color: #8b4513;
+}
+
+// ============================================
+// 🎨 NAVIGATION
+// ============================================
+.nav-pills .nav-link.active,
+.nav-pills .show > .nav-link {
+  background-color: #8b4513;
+}
+
+.navbar-brand,
+.nav-link {
+  &:hover {
+    color: #8b4513;
+  }
+}
+
+// ============================================
+// 🎨 CARDS
+// ============================================
+.card {
+  &.border-purple {
+    border-color: #8b4513 !important;
+  }
+  
+  .card-header {
+    &.bg-purple {
+      background: linear-gradient(135deg, #8b4513 0%, #76380f 100%) !important;
+      color: white;
+    }
+  }
+}
+
+// ============================================
+// 🎨 PROGRESS BARS
+// ============================================
+.progress-bar {
+  &.bg-purple {
+    background-color: #8b4513 !important;
+  }
+}
+
+// ============================================
+// 🎨 SPINNERS
+// ============================================
+.spinner-border,
+.spinner-grow {
+  &.text-purple {
+    color: #8b4513 !important;
+  }
+}
+
+// ============================================
+// 🎨 TABLES
+// ============================================
+.table-purple {
+  --bs-table-bg: rgba(139, 69, 19, 0.05);
+  --bs-table-border-color: rgba(139, 69, 19, 0.2);
+  --bs-table-striped-bg: rgba(139, 69, 19, 0.02);
+  --bs-table-hover-bg: rgba(139, 69, 19, 0.08);
+  color: #5f2a0b;
+}
+
+// ============================================
+// 🎨 MODALS
+// ============================================
+.modal-header {
+  &.bg-purple {
+    background: linear-gradient(135deg, #8b4513 0%, #76380f 100%);
+    color: white;
+  }
+}
+
+// ============================================
+// 🎨 TOASTS
+// ============================================
+.toast {
+  &.bg-purple {
+    background: linear-gradient(135deg, #8b4513 0%, #76380f 100%);
+    color: white;
+  }
+}
+
+// ============================================
+// 🎨 DROPDOWNS
+// ============================================
+.dropdown-item {
+  &:hover,
+  &:focus {
+    background-color: rgba(139, 69, 19, 0.08);
+    color: #5f2a0b;
+  }
+  
+  &.active,
+  &:active {
+    background-color: #8b4513;
+    color: white;
+  }
+}
+
+// ============================================
+// 🎨 PAGINATION
+// ============================================
+.pagination {
+  .page-link {
+    color: #8b4513;
+    
+    &:hover {
+      color: #76380f;
+      background-color: rgba(139, 69, 19, 0.08);
+      border-color: #8b4513;
+    }
+  }
+  
+  .page-item.active .page-link {
+    background-color: #8b4513;
+    border-color: #8b4513;
+  }
+}
+
+// ============================================
+// 🎨 LIST GROUP
+// ============================================
+.list-group-item {
+  &.active {
+    background-color: #8b4513;
+    border-color: #8b4513;
+  }
+  
+  &.list-group-item-purple {
+    background-color: rgba(139, 69, 19, 0.1);
+    color: #5f2a0b;
+  }
+}
+
+// ============================================
+// 🎨 BREADCRUMB
+// ============================================
+.breadcrumb-item {
+  &.active {
+    color: #8b4513;
+  }
+  
+  a {
+    color: #8b4513;
+    
+    &:hover {
+      color: #76380f;
+    }
+  }
+}
+
+// ============================================
+// 🎨 ACCORDION
+// ============================================
+.accordion-button {
+  &:not(.collapsed) {
+    background-color: rgba(139, 69, 19, 0.1);
+    color: #5f2a0b;
+  }
+  
+  &:focus {
+    border-color: #8b4513;
+    box-shadow: 0 0 0 0.25rem rgba(139, 69, 19, 0.25);
+  }
+}
+
+// ============================================
+// 🎨 OFFCANVAS
+// ============================================
+.offcanvas-header {
+  &.bg-purple {
+    background: linear-gradient(135deg, #8b4513 0%, #76380f 100%);
+    color: white;
+  }
+}
+
+// ============================================
+// 🎨 SCROLLBAR (Webkit browsers)
+// ============================================
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #8b4513 0%, #76380f 100%);
+  
+  &:hover {
+    background: linear-gradient(135deg, #a0521a 0%, #8b4513 100%);
+  }
+}
+
+// Firefox
+* {
+  scrollbar-color: #8b4513 rgba(139, 69, 19, 0.1);
+}
+
+// ============================================
+// 🎨 SELECTION TEXT
+// ============================================
+::selection {
+  background-color: #8b4513;
+  color: white;
+}
+
+::-moz-selection {
+  background-color: #8b4513;
+  color: white;
+}
+
+// ============================================
+// 🎨 FOCUS VISIBLE
+// ============================================
+*:focus-visible {
+  outline-color: #8b4513;
+}

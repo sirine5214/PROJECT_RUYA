@@ -1,0 +1,155 @@
+<!-- default.component.html - Version corrigée complète -->
+<div class="ruya-app" [class.session-closed]="!sessionActive()">
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-content">
+      <div class="brand-section">
+        <div class="brand-logo">
+          
+          <div class="brand-text">
+            <h1>RUYA</h1>
+            <p class="brand-subtitle">Application de Suivi des flux de compensation</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <div class="session-info">
+          <div class="status-badge" [class]="sessionActive() ? 'status-active' : 'status-inactive'">
+            <i class="fas fa-circle pulse"></i>
+            <span>{{ sessionActive() ? 'Session Active' : 'Session Fermée' }}</span>
+          </div>
+          <div class="date-display">
+            <i class="fas fa-calendar-alt"></i>
+            <span>{{ currentDate() | date:'dd/MM/yyyy' }}</span>
+          </div>
+        </div>
+      </div> 
+    </div>
+  </header>
+
+  <!-- Main Dashboard -->
+  <main class="dashboard-main">
+    <div class="dashboard-container">
+      <!-- Cards Grid -->
+      <div class="cards-grid">
+        <div 
+          class="dashboard-card animate-fade-in" 
+          *ngFor="let card of cardData(); trackBy: trackByIndex"
+          [ngClass]="getCardClass(card.type)"
+        >
+          <div class="card-header">
+            <div class="card-title">
+              <i [class]="card.icon"></i>
+              <span>{{ card.title }}</span>
+            </div>
+            <div class="card-indicator"></div>
+          </div>
+
+          <div class="card-content">
+            <!-- CORRECTION PRINCIPALE : Data rows avec titres -->
+            <div 
+              class="data-row" 
+              *ngFor="let row of card.data; trackBy: trackByIndex"
+            >
+              <div class="data-label">{{ row.label }}</div>
+              
+              <div class="data-values">
+                <!-- Status Display (pour les indicateurs d'état) -->
+                <div 
+                  *ngIf="row.status && typeof row.value === 'string'" 
+                  class="status-indicator"
+                  [ngClass]="getStatusClass(row.status)"
+                >
+                  <i class="fas fa-circle"></i>
+                  <span>{{ row.value }}</span>
+                </div>
+
+                <!-- Affichage des valeurs numériques -->
+                <div *ngIf="typeof row.value === 'number'" class="value-container">
+                  <!-- Titre Nombre -->
+                  <div class="value-header">
+                    <div class="header-title">Nombre</div>
+                  </div>
+                  <!-- Valeur numérique -->
+                  <div class="value-box">
+                    <div class="data-value">{{ row.value | number:'1.0-0' }}</div>
+                  </div>
+                </div>
+
+                <!-- Cas où il n'y a que la valeur string (sans status) -->
+                <div *ngIf="typeof row.value === 'string' && !row.status" class="simple-value">
+                  {{ row.value }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Sections spéciales pour certaines cartes -->
+            <div *ngIf="card.title === 'Carthago avant CTR'" class="input-section">
+              <div class="form-group">
+                <label>Prochaine génération</label>
+                <input type="time" class="form-input" value="14:30">
+              </div>
+            </div>
+
+            <div *ngIf="card.title === 'Actions et Contrôles'" class="action-section">
+              <div class="button-group">
+          
+                
+                <button 
+                  class="btn btn-success" 
+                  (click)="onValidateData()" 
+                  [disabled]="isLoading()"
+                >
+                  <i class="fas fa-check"></i>
+                  <span>Valider</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Barre d'actions globales -->
+      <div class="global-actions">
+        <button 
+          class="btn btn-outline-primary" 
+          (click)="refreshData()"
+          [disabled]="isLoading()"
+        >
+          <i class="fas fa-refresh" [class.fa-spin]="isLoading()"></i>
+          <span>Actualiser</span>
+        </button>
+
+        <button 
+          class="btn btn-outline-secondary" 
+          (click)="onExportData()"
+        >
+          <i class="fas fa-download"></i>
+          <span>Exporter</span>
+        </button>
+
+        <button 
+          class="btn btn-outline-warning" 
+          (click)="toggleAutoRefresh()"
+        >
+          <i [class]="autoRefreshEnabled() ? 'fas fa-pause' : 'fas fa-play'"></i>
+          <span>{{ autoRefreshEnabled() ? 'Pause' : 'Reprendre' }}</span>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Loading Overlay -->
+  <div *ngIf="isLoading()" class="loading-overlay">
+    <div class="loading-content">
+      <div class="spinner"></div>
+      <p>Chargement des données...</p>
+    </div>
+  </div>
+
+  <!-- Notification Container -->
+  <div class="notification-container">
+    <!-- Notifications seront ajoutées dynamiquement ici -->
+  </div>
+</div>

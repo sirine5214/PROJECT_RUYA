@@ -1,0 +1,40 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th>Code EN</th>
+      <th>Code Valeur</th>
+      <th>Date création</th>
+      <th>Nature</th>
+      <th>Nom fichier</th>
+      <th>Sens</th>
+      <th>Type fichier</th>
+      <th>Montant</th>
+      <th>Nomber</th>
+      <th>Date maj</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let fichier of fichiers">
+      <td>{{ fichier.codEn }}</td>
+      <td>{{ fichier.codeValeur }}</td>
+      <td>{{ fichier.createdAt }}</td>
+      <td>{{ fichier.natureFichier }}</td>
+      <td>{{ fichier.nomFichier }}</td>
+      <td [ngClass]="{
+        'badge-sens-emis': fichier.sens === 'Émis',
+        'badge-sens-recu': fichier.sens === 'Reçu'
+      }">{{ fichier.sens }}</td>
+      <td>{{ fichier.typeFichier }}</td>
+      <td>{{ fichier.montant || 0 }}</td>
+      <td>{{ fichier.nomber || 0 }}</td>
+      <td>{{ fichier.updatedAt }}</td>
+    </tr>
+    <tr *ngIf="fichiers.length === 0">
+      <td colspan="10" class="text-center text-muted">Aucun fichier trouvé.</td>
+    </tr>
+  </tbody>
+</table>
+
+<ul>
+
+</ul>

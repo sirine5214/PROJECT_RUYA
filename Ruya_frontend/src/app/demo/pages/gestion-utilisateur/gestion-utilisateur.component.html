@@ -1,0 +1,294 @@
+<div class="gestion-utilisateur-container">
+  <!-- Messages de succès et d'erreur globaux -->
+  <div class="alert alert-success" *ngIf="successMsg">
+    <i class="ti ti-check"></i> {{ successMsg }}
+  </div>
+  <div class="alert alert-error" *ngIf="errorMsg && !isModalOpen">
+    <i class="ti ti-alert-circle"></i> {{ errorMsg }}
+  </div>
+
+  <div class="header-utilisateur">
+    <h2>Gestion des utilisateurs</h2>
+    <button class="ajouter-btn" (click)="ouvrirModal()" title="Ajouter un utilisateur">
+      <i class="ti ti-user-plus"></i> Ajouter
+    </button>
+  </div>
+
+  <!-- Barre de recherche -->
+  <div class="search-container">
+    <div class="search-box">
+      <i class="ti ti-search"></i>
+      <input 
+        type="text" 
+        [(ngModel)]="searchTerm" 
+        (ngModelChange)="onSearchChange()"
+        placeholder="Rechercher par nom d'utilisateur ou email..."
+        class="search-input"
+      />
+      <button *ngIf="searchTerm" class="clear-search" (click)="searchTerm = ''; onSearchChange()">
+        <i class="ti ti-x"></i>
+      </button>
+    </div>
+    <div class="search-stats">
+      {{ utilisateursFiltres.length }} utilisateur(s) trouvé(s)
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table-utilisateurs">
+      <thead>
+        <tr>
+          <th>Nom d'utilisateur</th>
+          <th>Email</th>
+          <th>Rôle</th>
+          <th>État</th>
+          <th>Date de création</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let utilisateur of utilisateursPagines">
+          <td>
+            <div class="user-info">
+              <div class="user-avatar">
+                <i class="ti ti-user"></i>
+              </div>
+              <span class="username">{{ utilisateur.username }}</span>
+            </div>
+          </td>
+          <td>
+            <span class="email-text">{{ utilisateur.email }}</span>
+          </td>
+          <td>
+            <span class="badge" [ngClass]="getRoleBadgeClass(utilisateur.role)">
+              <i class="ti" [ngClass]="utilisateur.role === 'ADMIN' ? 'ti-shield-check' : 'ti-user'"></i>
+              {{ utilisateur.role }}
+            </span>
+          </td>
+          <td>
+            <span class="badge" [ngClass]="utilisateur.isActive ? 'badge-actif' : 'badge-inactif'">
+              <i class="ti" [ngClass]="utilisateur.isActive ? 'ti-check' : 'ti-x'"></i>
+              {{ utilisateur.isActive ? 'Actif' : 'Inactif' }}
+            </span>
+          </td>
+          <td>
+            <span class="date-text">{{ formaterDate(utilisateur.createdAt) }}</span>
+          </td>
+          <td class="actions-cell">
+            <button 
+              class="action-btn edit-btn" 
+              (click)="ouvrirModalEdit(utilisateur)" 
+              title="Modifier l'utilisateur">
+              <i class="ti ti-edit"></i>
+            </button>
+            <button 
+              class="action-btn activate-btn" 
+              (click)="activerUtilisateur(utilisateur.id)" 
+              [disabled]="utilisateur.isActive" 
+              title="Activer l'utilisateur">
+              <i class="ti ti-user-check"></i>
+            </button>
+            <button 
+              class="action-btn deactivate-btn" 
+              (click)="desactiverUtilisateur(utilisateur.id)" 
+              [disabled]="!utilisateur.isActive" 
+              title="Désactiver l'utilisateur">
+              <i class="ti ti-user-x"></i>
+            </button>
+            <button 
+              class="action-btn delete-btn" 
+              (click)="supprimerUtilisateur(utilisateur.id)" 
+              title="Supprimer l'utilisateur">
+              <i class="ti ti-trash"></i>
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="utilisateursPagines.length === 0">
+          <td colspan="6" class="no-data">
+            <i class="ti ti-users-off"></i>
+            <p>Aucun utilisateur trouvé</p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination-container" *ngIf="totalPages > 1">
+    <button 
+      class="pagination-btn" 
+      (click)="changerPage(currentPage - 1)" 
+      [disabled]="currentPage === 1">
+      <i class="ti ti-chevron-left"></i>
+    </button>
+    <button 
+      *ngFor="let page of pages" 
+      class="pagination-btn" 
+      [class.active]="page === currentPage"
+      (click)="changerPage(page)">
+      {{ page }}
+    </button>
+    <button 
+      class="pagination-btn" 
+      (click)="changerPage(currentPage + 1)" 
+      [disabled]="currentPage === totalPages">
+      <i class="ti ti-chevron-right"></i>
+    </button>
+  </div>
+
+  <!-- Modal d'ajout d'utilisateur -->
+  <div class="modal-backdrop" *ngIf="isModalOpen">
+    <div class="modal-content">
+      <h3>
+        <i class="ti ti-user-plus"></i>
+        Ajouter un utilisateur
+      </h3>
+      <form #userForm="ngForm" (ngSubmit)="ajouterUtilisateur()">
+        <div class="form-group">
+          <label>
+            <i class="ti ti-user"></i>
+            Nom d'utilisateur *
+          </label>
+          <input 
+            type="text" 
+            [(ngModel)]="newUser.username" 
+            name="username" 
+            required 
+            placeholder="Entrez le nom d'utilisateur"
+            minlength="3"
+          />
+        </div>
+        <div class="form-group">
+          <label>
+            <i class="ti ti-mail"></i>
+            Email *
+          </label>
+          <input 
+            type="email" 
+            [(ngModel)]="newUser.email" 
+            name="email" 
+            required 
+            placeholder="exemple@email.com"
+            pattern="^\S+@\S+\.\S+$"
+          />
+        </div>
+        <div class="form-group">
+          <label>
+            <i class="ti ti-shield"></i>
+            Rôle *
+          </label>
+          <select 
+            [(ngModel)]="newUser.role" 
+            name="role" 
+            required
+            class="role-select">
+            <option value="">Sélectionnez un rôle</option>
+            <option value="SIMPLE_USER">Utilisateur</option>
+            <option value="ADMIN">Administrateur</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>
+            <i class="ti ti-lock"></i>
+            Mot de passe *
+          </label>
+          <input 
+            type="password" 
+            [(ngModel)]="newUser.password" 
+            name="password" 
+            required 
+            placeholder="Au moins 6 caractères"
+            minlength="6"
+          />
+        </div>
+        <div class="alert alert-error" *ngIf="errorMsg">
+          <i class="ti ti-alert-circle"></i>
+          {{ errorMsg }}
+        </div>
+        <div class="modal-actions">
+          <button type="button" (click)="fermerModal()">
+            <i class="ti ti-x"></i>
+            Annuler
+          </button>
+          <button type="submit" [disabled]="!userForm.form.valid">
+            <i class="ti ti-check"></i>
+            Ajouter
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal de modification d'utilisateur -->
+  <div class="modal-backdrop" *ngIf="isEditModalOpen">
+    <div class="modal-content">
+      <h3>
+        <i class="ti ti-edit"></i>
+        Modifier l'utilisateur
+      </h3>
+      <form #editUserForm="ngForm" (ngSubmit)="modifierUtilisateur()">
+        <div class="form-group">
+          <label>
+            <i class="ti ti-user"></i>
+            Nom d'utilisateur *
+          </label>
+          <input 
+            type="text" 
+            [(ngModel)]="editForm.username" 
+            name="username" 
+            required 
+            placeholder="Entrez le nom d'utilisateur"
+            minlength="3"
+          />
+        </div>
+        <div class="form-group">
+          <label>
+            <i class="ti ti-mail"></i>
+            Email *
+          </label>
+          <input 
+            type="email" 
+            [(ngModel)]="editForm.email" 
+            name="email" 
+            required 
+            placeholder="exemple@email.com"
+            pattern="^\S+@\S+\.\S+$"
+          />
+        </div>
+        <div class="form-group">
+          <label>
+            <i class="ti ti-shield"></i>
+            Rôle *
+          </label>
+          <select 
+            [(ngModel)]="editForm.role" 
+            name="role" 
+            required
+            class="role-select">
+            <option value="">Sélectionnez un rôle</option>
+            <option value="SIMPLE_USER">Utilisateur</option>
+            <option value="ADMIN">Administrateur</option>
+          </select>
+        </div>
+        <div class="alert alert-info">
+          <i class="ti ti-info-circle"></i>
+          Le mot de passe ne peut pas être modifié ici. L'utilisateur peut le changer depuis son profil.
+        </div>
+        <div class="alert alert-error" *ngIf="errorMsg">
+          <i class="ti ti-alert-circle"></i>
+          {{ errorMsg }}
+        </div>
+        <div class="modal-actions">
+          <button type="button" (click)="fermerModalEdit()">
+            <i class="ti ti-x"></i>
+            Annuler
+          </button>
+          <button type="submit" [disabled]="!editUserForm.form.valid">
+            <i class="ti ti-check"></i>
+            Modifier
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

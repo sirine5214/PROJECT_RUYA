@@ -1,0 +1,133 @@
+label {
+  font-weight: bold;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-block;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #a85d3b 0%, #3a231a 100%);
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  &:hover {
+    color: #a85d3b;
+    transform: translateX(3px);
+    
+    &::before {
+      width: 100%;
+    }
+  }
+  
+  &:active {
+    transform: translateX(1px) scale(0.98);
+    
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 15px;
+      height: 15px;
+      background: rgba(168, 93, 59, 0.2);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      animation: rippleLabel 0.4s ease-out;
+    }
+  }
+}
+
+// Animation ripple pour les labels
+@keyframes rippleLabel {
+  0% {
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+  100% {
+    width: 60px;
+    height: 60px;
+    opacity: 0;
+  }
+}
+
+// Animation pour les groupes de navigation
+.nav-item.coded-menu-caption {
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: linear-gradient(90deg, rgba(168, 93, 59, 0.1) 0%, rgba(58, 35, 26, 0.1) 100%);
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin: 4px 0;
+  }
+}
+
+// Amélioration pour l'effet de clic avec couleur orange
+label {
+  &:active {
+    color: #a85d3b !important;
+    font-weight: 700;
+    text-shadow: 0 1px 2px rgba(168, 93, 59, 0.3);
+    
+    &::before {
+      background: linear-gradient(90deg, #a85d3b 0%, #3a231a 100%);
+      height: 3px;
+      border-radius: 2px;
+      box-shadow: 0 2px 4px rgba(168, 93, 59, 0.4);
+    }
+    
+    &::after {
+      background: rgba(168, 93, 59, 0.3);
+      animation: rippleLabelOrange 0.4s ease-out;
+    }
+  }
+}
+
+// Animation ripple orange pour les labels
+@keyframes rippleLabelOrange {
+  0% {
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+  100% {
+    width: 80px;
+    height: 80px;
+    opacity: 0;
+  }
+}
+
+// Animation pour les groupes de navigation avec effet orange
+.nav-item.coded-menu-caption {
+  &:active {
+    background: linear-gradient(90deg, rgba(168, 93, 59, 0.1) 0%, rgba(58, 35, 26, 0.1) 100%) !important;
+    border: 1px solid rgba(168, 93, 59, 0.3);
+    box-shadow: 0 2px 8px rgba(168, 93, 59, 0.2);
+    
+    label {
+      animation: labelClickOrange 0.3s ease-out;
+    }
+  }
+}
+
+// Animation spécifique pour le clic sur les labels
+@keyframes labelClickOrange {
+  0% {
+    transform: scale(1);
+    color: #a85d3b;
+  }
+  50% {
+    transform: scale(1.05);
+    color: #c17a4a;
+  }
+  100% {
+    transform: scale(1);
+    color: #a85d3b;
+  }
+}

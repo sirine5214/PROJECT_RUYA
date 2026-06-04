@@ -1,0 +1,40 @@
+@if (!item.hidden) {
+  @if (item.url && !item.external) {
+    <li [ngClass]="item.classes!" [routerLinkActive]="['active']">
+      <a class="nav-link" [target]="item.target ? '_blank' : '_self'" [routerLink]="[item.url]" (click)="onItemClick($event)">
+        @if (item.icon) {
+          <span class="coded-micon"><i [ngClass]="item.icon"></i></span>
+        }
+        <span class="coded-mtext" 
+              [ngStyle]="{
+                'font-weight': (item.title === 'Ajouter un fichier' || item.title === 'Gestion Utilisateur' || item.title === 'Tableau de bord' || item.title === '+suivi CTR/BO') ? 'bold' : 'normal',
+                'color': item.title.includes('Fichier n°') ? '#ffffff' : 'inherit',
+                'text-shadow': item.title.includes('Fichier n°') ? '0 1px 2px rgba(0,0,0,0.1)' : 'none'
+              }">{{ item.title }}</span>
+        <i class="ti ti-arrow-right nav-item-arrow" [ngClass]="{'active-arrow': isActive()}"></i>
+      </a>
+    </li>
+  }
+  @if (item.url && item.external) {
+    <li [ngClass]="item.classes!" [routerLinkActive]="['active']">
+      <a [target]="item.target ? '_blank' : '_self'" [href]="item.url">
+        @if (item.icon) {
+          <span class="coded-micon"><i [ngClass]="item.icon"></i></span>
+        }
+        @if (item.icon) {
+          <span class="coded-mtext" 
+                [ngStyle]="{
+                  'color': item.title.includes('Fichier n°') ? '#ffffff' : 'inherit',
+                  'text-shadow': item.title.includes('Fichier n°') ? '0 1px 2px rgba(0,0,0,0.1)' : 'none'
+                }">{{ item.title }}</span>
+        } @else {
+          <span [ngStyle]="{
+            'color': item.title.includes('Fichier n°') ? '#ffffff' : 'inherit',
+            'text-shadow': item.title.includes('Fichier n°') ? '0 1px 2px rgba(0,0,0,0.1)' : 'none'
+          }">{{ item.title }}</span>
+        }
+        <i class="ti ti-external-link nav-item-arrow" [ngClass]="{'active-arrow': isActive()}"></i>
+      </a>
+    </li>
+  }
+}

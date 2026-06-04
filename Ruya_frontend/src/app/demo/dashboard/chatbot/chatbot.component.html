@@ -1,0 +1,225 @@
+<!-- Chatbot Widget Amélioré -->
+<div class="chatbot-widget" [class.expanded]="isExpanded">
+  <!-- Chat Toggle Button avec badge de notifications -->
+  <div class="chat-toggle" (click)="toggleChat()" *ngIf="!isExpanded">
+    <i class="ti ti-message-circle"></i>
+    <span class="chat-badge">Assistant RU'ya</span>
+    <span class="notification-badge" *ngIf="unreadCount > 0">{{ unreadCount }}</span>
+  </div>
+
+  <!-- Chat Window -->
+  <div class="chat-window" *ngIf="isExpanded">
+    <!-- Chat Header -->
+    <div class="chat-header">
+      <div class="chat-title">
+        <i class="ti ti-robot"></i>
+        <span>Assistant RU'ya</span>
+        <span class="status-indicator online">
+          <i class="ti ti-circle-filled"></i>
+        </span>
+      </div>
+      <div class="chat-actions">
+        <button class="btn-icon" (click)="toggleHistory()" title="Historique des conversations" [class.active]="showHistory">
+          <i class="ti ti-history"></i>
+        </button>
+        <button class="btn-icon" (click)="exportConversation()" title="Exporter la conversation">
+          <i class="ti ti-download"></i>
+        </button>
+        <button class="btn-icon" (click)="toggleQuickActions()" title="Actions rapides" [class.active]="showQuickActions">
+          <i class="ti ti-bolt"></i>
+        </button>
+        <button class="btn-icon" (click)="clearChat()" title="Nouvelle conversation">
+          <i class="ti ti-trash"></i>
+        </button>
+        <button class="btn-icon" (click)="toggleChat()" title="Fermer">
+          <i class="ti ti-x"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Quick Actions Panel -->
+    <div class="quick-actions-panel" *ngIf="showQuickActions" [@slideDown]>
+      <div class="quick-actions-title">⚡ Actions Rapides</div>
+      <div class="quick-actions-grid">
+        <button class="quick-action-btn" (click)="executeQuickAction('Statistiques générales')">
+          <i class="ti ti-chart-bar"></i>
+          <span>Statistiques</span>
+        </button>
+        <button class="quick-action-btn" (click)="executeQuickAction('Fichiers ajoutés aujourd\'hui ?')">
+          <i class="ti ti-file-plus"></i>
+          <span>Fichiers du jour</span>
+        </button>
+        <button class="quick-action-btn" (click)="executeQuickAction('Montant total aujourd\'hui ?')">
+          <i class="ti ti-currency-dollar"></i>
+          <span>Montants</span>
+        </button>
+        <button class="quick-action-btn" (click)="executeQuickAction('Temps de traitement chèques')">
+          <i class="ti ti-clock"></i>
+          <span>Temps de traitement</span>
+        </button>
+        <button class="quick-action-btn" (click)="executeQuickAction('Fichiers rejetés')">
+          <i class="ti ti-alert-circle"></i>
+          <span>Fichiers rejetés</span>
+        </button>
+        <button class="quick-action-btn" (click)="executeQuickAction('Statistiques utilisateurs')">
+          <i class="ti ti-users"></i>
+          <span>Utilisateurs</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- History Panel -->
+    <div class="history-panel" *ngIf="showHistory" [@slideDown]>
+      <div class="history-header">
+        <div class="history-title">
+          <i class="ti ti-history"></i>
+          <span>Historique des conversations</span>
+        </div>
+        <div class="history-stats">{{ getUsageStats() }}</div>
+      </div>
+      <div class="history-list">
+        <div 
+          *ngFor="let session of chatHistory" 
+          class="history-item"
+          (click)="loadSessionFromHistory(session.sessionId)"
+        >
+          <div class="history-item-icon">
+            <i class="ti ti-message"></i>
+          </div>
+          <div class="history-item-content">
+            <div class="history-item-title">
+              {{ session.messages.length }} messages
+            </div>
+            <div class="history-item-date">
+              {{ formatSessionDate(session.startTime) }}
+            </div>
+          </div>
+          <i class="ti ti-chevron-right"></i>
+        </div>
+        <div *ngIf="chatHistory.length === 0" class="history-empty">
+          <i class="ti ti-inbox"></i>
+          <p>Aucun historique disponible</p>
+        </div>
+      </div>
+      <div class="history-actions" *ngIf="chatHistory.length > 0">
+        <button class="btn-clear-history" (click)="clearHistory()">
+          <i class="ti ti-trash"></i>
+          Effacer tout l'historique
+        </button>
+      </div>
+    </div>
+
+    <!-- Chat Messages -->
+    <div class="chat-messages" #chatMessages>
+      <div 
+        *ngFor="let message of messages; let i = index" 
+        class="message"
+        [class.user-message]="message.isUser"
+        [class.bot-message]="!message.isUser"
+        [class.error-message]="message.type === 'error'"
+        [class.success-message]="message.type === 'success'"
+        [class.info-message]="message.type === 'info'"
+        [class.warning-message]="message.type === 'warning'"
+        [@messageAnimation]
+      >
+        <div class="message-avatar" *ngIf="!message.isUser">
+          <i class="ti ti-robot"></i>
+        </div>
+        
+        <div class="message-content">
+          <div class="message-text" [innerHTML]="message.text | markdown"></div>
+          <div class="message-footer">
+            <div class="message-time">
+              {{ message.timestamp | date:'HH:mm' }}
+            </div>
+            <div class="message-actions">
+              <button class="message-action-btn" (click)="copyMessage(message)" title="Copier">
+                <i class="ti ti-copy"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="message-avatar" *ngIf="message.isUser">
+          <i class="ti ti-user"></i>
+        </div>
+      </div>
+
+      <!-- Loading indicator avec animation améliorée -->
+      <div class="message bot-message" *ngIf="isLoading" [@messageAnimation]>
+        <div class="message-avatar">
+          <i class="ti ti-robot"></i>
+        </div>
+        <div class="message-content">
+          <div class="typing-indicator">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <div class="typing-text">Assistant en train d'écrire...</div>
+        </div>
+      </div>
+      
+      <!-- Scroll to bottom button -->
+      <button 
+        class="scroll-to-bottom" 
+        *ngIf="messages.length > 5"
+        (click)="scrollToBottom()"
+        title="Descendre"
+      >
+        <i class="ti ti-arrow-down"></i>
+      </button>
+    </div>
+
+    <!-- Suggestions améliorées -->
+    <div class="chat-suggestions" *ngIf="suggestions.length > 0 && messages.length <= 1">
+      <div class="suggestions-title">
+        <i class="ti ti-bulb"></i>
+        Questions suggérées
+      </div>
+      <div class="suggestion-chips">
+        <button 
+          *ngFor="let suggestion of suggestions" 
+          class="suggestion-chip"
+          (click)="useSuggestion(suggestion)"
+          [@fadeIn]
+        >
+          <i class="ti ti-message-circle"></i>
+          {{ suggestion }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Chat Input amélioré -->
+    <div class="chat-input">
+      <div class="input-wrapper">
+        <textarea
+          [(ngModel)]="currentMessage"
+          (keydown)="onKeyPress($event)"
+          placeholder="Posez votre question sur RU'ya..."
+          class="form-control"
+          rows="1"
+          [disabled]="isLoading"
+          #messageInput
+        ></textarea>
+        <div class="input-actions">
+          <button 
+            class="btn btn-primary send-btn"
+            (click)="sendMessage()"
+            [disabled]="!currentMessage.trim() || isLoading"
+            title="Envoyer (Entrée)"
+          >
+            <i class="ti ti-send" *ngIf="!isLoading"></i>
+            <i class="ti ti-loader rotating" *ngIf="isLoading"></i>
+          </button>
+        </div>
+      </div>
+      <div class="input-hints" *ngIf="!isLoading && !currentMessage">
+        <span class="hint-item">
+          <i class="ti ti-keyboard"></i>
+          Appuyez sur Entrée pour envoyer
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

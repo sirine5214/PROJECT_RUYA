@@ -1,0 +1,39 @@
+body {
+  font-family: Arial, sans-serif;
+  color: #222;
+  background-color: #fff;
+}
+
+a, .link {
+  color: #E60028;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+a:hover, .link:hover {
+  color: #FFD600;
+  text-decoration: underline;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #222;
+  font-family: Arial, sans-serif;
+}
+
+.btn-primary {
+  background-color: #FFD600;
+  border-color: #FFD600;
+  color: #222;
+  font-weight: bold;
+}
+
+.btn-primary:hover, .btn-primary:focus {
+  background-color: #e6c200;
+  border-color: #e6c200;
+  color: #222;
+}
+
+.text-secondary, .form-text {
+  color: #E60028 !important;
+  font-style: italic;
+} 

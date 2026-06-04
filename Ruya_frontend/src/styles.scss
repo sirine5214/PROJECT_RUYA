@@ -1,0 +1,276 @@
+/* You can add global styles to this file, and also import other style files */
+/**======================================================================
+=========================================================================
+Template Name: berry - Most Complete Angular Admin Template
+Author: CodedThemes
+Support: https://codedthemes.support-hub.io/
+File: style.css
+=========================================================================
+=================================================================================== */
+
+// main framework
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+@import 'node_modules/bootstrap/scss/variables-dark';
+
+@import 'scss/settings/color-variables';
+@import 'scss/settings/theme-variables';
+@import 'scss/settings/bootstrap-variables.scss';
+
+@import 'scss/bootstrap/bootstrap.scss';
+
+@import 'node_modules/bootstrap/scss/utilities';
+@import 'node_modules/bootstrap/scss/utilities/api';
+
+@import 'scss/themes/generic.scss';
+@import 'scss/themes/general.scss';
+
+// Layouts
+@import 'scss/themes/layouts/layouts';
+
+// Components
+@import 'scss/themes/components/components';
+
+// pages
+@import 'scss/themes/pages/page.scss';
+
+@import 'scss/themes/customizer';
+@import 'scss/style-preset.scss';
+@import 'scss/themes/brown-overrides'; // Overrides violet → marron
+
+// fonts
+@import url('scss/fonts/berry/berry-icons.css'); /** custom font icons - berry **/
+@import 'scss/fonts/tabler-icons.min.css';
+@import 'scss/fonts/phosphor/duotone/style.css';
+
+.apexcharts-menu-icon {
+  display: none !important;
+}
+
+/* Variables de couleurs - définies en premier */
+$header-brown: #8b4513;
+$brown-base: #8b4513;
+$brown-light: #a0521a;
+$brown-dark: #76380f;
+$brown-lighter: #b85f21;
+$brown-darker: #5f2a0b;
+$icon-white: #ffffff;
+$arrow-brown: #6b3410;
+$icon-purple: #6b3410;
+$badge-red: #ef4444;
+$badge-cyan: #06b6d4;
+
+/* Icône de retour / navigation */
+.back-button,
+.nav-icon {
+  position: relative;
+  width: 44px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: $icon-white;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.back-button:hover,
+.nav-icon:hover {
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+  transform: translateY(-1px);
+}
+
+/* Flèche ou icône à l'intérieur */
+.back-button .arrow,
+.back-button svg,
+.back-button .icon,
+.nav-icon .arrow,
+.nav-icon svg,
+.nav-icon .icon {
+  width: 18px;
+  height: 18px;
+  color: $arrow-brown;
+  fill: currentColor;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.back-button i,
+.nav-icon i {
+  color: $arrow-brown;
+  font-size: 16px;
+  line-height: 1;
+}
+
+/* Notification bell */
+.notification-bell {
+  position: relative;
+  width: 44px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: $icon-white;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  overflow: visible;
+}
+
+.notification-bell:hover {
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+  transform: translateY(-1px);
+}
+
+/* Icône cloche - couleur brune comme la flèche */
+.notification-bell .bell-icon,
+.notification-bell svg,
+.notification-bell .icon {
+  width: 18px;
+  height: 18px;
+  color: $arrow-brown;
+  fill: currentColor;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Si c'est une font icon */
+.notification-bell i {
+  color: $arrow-brown;
+  font-size: 16px;
+  line-height: 1;
+}
+
+/* Style pour le lien de notification dans le header */
+.pc-head-link.head-link-secondary {
+  position: relative;
+  width: 44px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: $icon-white !important;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin: 0 !important;
+  
+  &:hover {
+    box-shadow: 0 6px 16px rgba(0,0,0,0.12) !important;
+    transform: translateY(-1px);
+    background: $icon-white !important;
+  }
+  
+  > i {
+    color: $arrow-brown !important;
+    font-size: 20px;
+  }
+}
+
+/* Badge rouge - style minimaliste */
+.notification-bell .badge-red {
+  position: absolute;
+  top: -6px;
+  left: 4px;
+  width: 16px;
+  height: 16px;
+  background: #ef4444;
+  color: #fff;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border: 2px solid $icon-white;
+  z-index: 30;
+}
+
+/* Badge bleu - style minimaliste */
+.notification-bell .badge-cyan {
+  position: absolute;
+  bottom: -6px;
+  right: -8px;
+  min-width: 18px;
+  height: 16px;
+  padding: 0 4px;
+  background: #06b6d4;
+  color: #fff;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border: 2px solid $icon-white;
+  z-index: 25;
+}
+
+/* Header background */
+.app-header,
+.navbar {
+  background: $header-brown;
+}
+
+/* Style uniforme pour toutes les icônes du header */
+.header-icon {
+  width: 44px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: $icon-white;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.header-icon:hover {
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+  transform: translateY(-1px);
+}
+
+.header-icon svg,
+.header-icon .icon,
+.header-icon i {
+  color: $arrow-brown;
+  width: 18px;
+  height: 18px;
+  font-size: 16px;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .notification-bell,
+  .header-icon {
+    width: 40px;
+    height: 34px;
+  }
+  
+  .notification-bell svg,
+  .notification-bell .icon,
+  .header-icon svg,
+  .header-icon .icon {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .notification-bell .badge-red,
+  .notification-bell .badge-cyan {
+    width: 14px;
+    height: 14px;
+    font-size: 9px;
+  }
+}
+

@@ -1,0 +1,321 @@
+ <!-- Modal Backdrop -->
+<div class="modal-backdrop" *ngIf="isOpen" (click)="onBackdropClick($event)">
+  <!-- Modal Content -->
+  <div class="modal-content" [@modalAnimation]="isOpen ? 'open' : 'closed'">
+    <!-- Modal Header -->
+    <div class="modal-header">
+      <div class="header-content">
+        <div class="logo-section">
+          <img src="assets/images/logoAttijari.png" alt="Logo Attijari Bank" class="logo" style="height: 40px; width: auto; border-radius: 12px; box-shadow: 0 2px 12px rgba(34,34,34,0.10); background: #fff;" />
+          <div class="title-section">
+            <p class="modal-subtitle">Ajouter un nouveau fichier dans RUya</p>
+            <p class="user-info" *ngIf="currentUser" style="font-size: 12px; color: #666; margin: 0;">
+              <i class="ti ti-user me-1"></i>
+              Utilisateur: {{ currentUser.username }}
+            </p>
+          </div>
+        </div>
+        <button type="button" class="close-btn close-btn-right" (click)="onClose()">
+          <i class="ti ti-x"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="modal-body">
+      <form (ngSubmit)="onSubmit()" #fichierForm="ngForm" class="form-container">
+        <div class="form-grid">
+          <!-- Type de fichier -->
+          <div class="form-group">
+            <label for="typeFichier" class="form-label">
+              <i class="ti ti-file-text me-2"></i>
+              Type de fichier * <small class="text-muted">(Chèque, Effet, Prélèvement, Virement)</small>
+            </label>
+            <select 
+              class="form-select" 
+              id="typeFichier" 
+              [(ngModel)]="typeFichier" 
+              name="typeFichier" 
+              required
+              #typeFichierCtrl="ngModel">
+              <option value="">Sélectionner un type</option>
+              <option *ngFor="let type of typesFichier" [value]="type.value">
+                <i [class]="type.icon"></i> {{ type.label }}
+              </option>
+            </select>
+            <div class="text-danger" *ngIf="typeFichierCtrl.invalid && (typeFichierCtrl.dirty || typeFichierCtrl.touched)">
+              Le type de fichier est requis.
+            </div>
+            <div *ngIf="typeFichier" class="mt-2">
+              <span class="badge bg-primary">
+                <i class="ti ti-check me-1"></i>
+                Type sélectionné: {{ typeFichier.toUpperCase() }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Code fichier -->
+          <div class="form-group">
+            <label for="codeFichier" class="form-label">
+              <i class="ti ti-hash me-2"></i>
+              Code fichier *
+            </label>
+            <select 
+              class="form-select" 
+              id="codeFichier" 
+              [(ngModel)]="codeFichier" 
+              name="codeFichier" 
+              required
+              [disabled]="!typeFichier"
+              #codeFichierCtrl="ngModel">
+              <option value="">Sélectionner un code</option>
+              <option *ngFor="let code of getCodesDisponibles()" [value]="code.value">
+                {{ code.label }}
+              </option>
+            </select>
+            <div class="text-danger" *ngIf="codeFichierCtrl.invalid && (codeFichierCtrl.dirty || codeFichierCtrl.touched)">
+              Le code fichier est requis.
+            </div>
+          </div>
+
+          <!-- Sens -->
+          <div class="form-group">
+            <label for="sens" class="form-label">
+              <i class="ti ti-arrows-double-ne-sw me-2"></i>
+              Sens *
+            </label>
+            <select 
+              class="form-select" 
+              id="sens" 
+              [(ngModel)]="sens" 
+              name="sens" 
+              required
+              #sensCtrl="ngModel">
+              <option value="">Sélectionner le sens</option>
+              <option *ngFor="let option of sensOptions" [value]="option.value">
+                {{ option.label }}
+              </option>
+            </select>
+            <div class="text-danger" *ngIf="sensCtrl.invalid && (sensCtrl.dirty || sensCtrl.touched)">
+              Le sens est requis.
+            </div>
+          </div>
+
+          <!-- Code enregistrement -->
+          <div class="form-group">
+            <label for="codeEnregistrement" class="form-label">
+              <i class="ti ti-database me-2"></i>
+              Code enregistrement *
+            </label>
+            <select 
+              class="form-select" 
+              id="codeEnregistrement" 
+              [(ngModel)]="codeEnregistrement" 
+              name="codeEnregistrement" 
+              required
+              #codeEnregistrementCtrl="ngModel">
+              <option value="">Sélectionner un code</option>
+              <option *ngFor="let code of codeEnregistrementOptions" [value]="code.value">
+                {{ code.label }}
+              </option>
+            </select>
+            <div class="text-danger" *ngIf="codeEnregistrementCtrl.invalid && (codeEnregistrementCtrl.dirty || codeEnregistrementCtrl.touched)">
+              Le code d'enregistrement est requis.
+            </div>
+          </div>
+
+          <!-- Format fichier -->
+          <div class="form-group">
+            <label for="formatFichier" class="form-label">
+              <i class="ti ti-file me-2"></i>
+              Format fichier *
+            </label>
+            <select 
+              class="form-select" 
+              id="formatFichier" 
+              [(ngModel)]="formatFichier" 
+              name="formatFichier" 
+              required
+              #formatFichierCtrl="ngModel">
+              <option value="">Sélectionner le format</option>
+              <option *ngFor="let format of formatFichierOptions" [value]="format.value">
+                {{ format.label }}
+              </option>
+            </select>
+            <div class="text-danger" *ngIf="formatFichierCtrl.invalid && (formatFichierCtrl.dirty || formatFichierCtrl.touched)">
+              Le format du fichier est requis.
+            </div>
+          </div>
+
+          <!-- Nom du fichier -->
+          <div class="form-group">
+            <label for="nomFichier" class="form-label">
+              <i class="ti ti-edit me-2"></i>
+              Nom du fichier *
+            </label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="nomFichier" 
+              [(ngModel)]="nomFichier" 
+              name="nomFichier" 
+              placeholder="Ex: fichier_cheque_30"
+              required
+              pattern="^[a-zA-Z0-9_-]{5,}$"
+              #nomFichierCtrl="ngModel">
+            <div class="text-danger" *ngIf="nomFichierCtrl.invalid && (nomFichierCtrl.dirty || nomFichierCtrl.touched)">
+              <span *ngIf="nomFichierCtrl.errors?.['required']">Le nom du fichier est requis.</span>
+              <span *ngIf="nomFichierCtrl.errors?.['pattern']">Le nom doit comporter au moins 5 caractères (lettres, chiffres, tirets ou underscores).</span>
+            </div>
+          </div>
+
+          <!-- NOUVEAU: Numéro de remise -->
+          <div class="form-group">
+            <label for="numeroRemise" class="form-label">
+              <i class="ti ti-receipt me-2"></i>
+              Numéro de remise *
+            </label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="numeroRemise" 
+              [(ngModel)]="numeroRemise" 
+              name="numeroRemise" 
+              placeholder="Ex: REM-2024-001"
+              required
+              pattern="^[A-Z]{2,4}-[0-9]{4}-[0-9]{3,6}$"
+              #numeroRemiseCtrl="ngModel">
+            <div class="text-danger" *ngIf="numeroRemiseCtrl.invalid && (numeroRemiseCtrl.dirty || numeroRemiseCtrl.touched)">
+              <span *ngIf="numeroRemiseCtrl.errors?.['required']">Le numéro de remise est requis.</span>
+              <span *ngIf="numeroRemiseCtrl.errors?.['pattern']">Format: XXX-YYYY-NNNN (ex: REM-2024-001)</span>
+            </div>
+            <small class="form-text text-muted">Format attendu: REM-YYYY-XXX</small>
+          </div>
+
+          <!-- NOUVEAU: Validation -->
+          <div class="form-group">
+            <label for="validation" class="form-label">
+              <i class="ti ti-shield-check me-2"></i>
+              Statut de validation
+            </label>
+            <select 
+              class="form-select" 
+              id="validation" 
+              [(ngModel)]="validation" 
+              name="validation"
+              #validationCtrl="ngModel">
+              <option value="">Sélectionner le statut</option>
+              <option value="true">Validé</option>
+              <option value="false">En attente</option>
+            </select>
+            <small class="form-text text-muted">La validation peut être définie maintenant ou plus tard</small>
+          </div>
+
+          <!-- Montant -->
+          <div class="form-group">
+            <label for="montant" class="form-label">
+              <i class="ti ti-currency-dollar me-2"></i>
+              Montant *
+            </label>
+            <input 
+              type="number" 
+              class="form-control" 
+              id="montant" 
+              [(ngModel)]="montant" 
+              name="montant" 
+              placeholder="Ex: 1000.50"
+              required
+              min="0"
+              step="0.01"
+              #montantCtrl="ngModel">
+            <div class="text-danger" *ngIf="montantCtrl.invalid && (montantCtrl.dirty || montantCtrl.touched)">
+              <span *ngIf="montantCtrl.errors?.['required']">Le montant est requis.</span>
+              <span *ngIf="montantCtrl.errors?.['min']">Le montant doit être positif.</span>
+            </div>
+          </div>
+
+          <!-- Nomber -->
+          <div class="form-group">
+            <label for="nomber" class="form-label">
+              <i class="ti ti-hash me-2"></i>
+              Nomber *
+            </label>
+            <input 
+              type="number" 
+              class="form-control" 
+              id="nomber" 
+              [(ngModel)]="nombre" 
+              name="nomber" 
+              placeholder="Ex: 12345"
+              required
+              min="1"
+              #nomberCtrl="ngModel">
+            <div class="text-danger" *ngIf="nomberCtrl.invalid && (nomberCtrl.dirty || nomberCtrl.touched)">
+              <span *ngIf="nomberCtrl.errors?.['required']">Le nomber est requis.</span>
+              <span *ngIf="nomberCtrl.errors?.['min']">Le nomber doit être supérieur à 0.</span>
+            </div>
+          </div>
+
+          <!-- NOUVEAU: Origine de saisie -->
+          <div class="form-group">
+            <label for="origineSaisie" class="form-label">
+              <i class="ti ti-device-desktop me-2"></i>
+              Origine de saisie * <small class="text-muted">(Détermine le TypeFichier)</small>
+            </label>
+            <select 
+              class="form-select" 
+              id="origineSaisie" 
+              [(ngModel)]="origineSaisie" 
+              name="origineSaisie"
+              required
+              #origineSaisieCtrl="ngModel">
+              <option value="WEB">Web</option>
+              <option value="AGENCE">Agence</option>
+              <option value="BATCH">Batch</option>
+              <option value="ELECTRONIQUE">Électronique</option>
+            </select>
+            <small class="form-text text-muted">
+              Web → WEB | Agence → MANUEL | Batch → EN_SAISIE | Électronique → ELECTRONIQUE
+            </small>
+          </div>
+
+          <!-- NOUVEAU: Type d'encaissement -->
+          <div class="form-group">
+            <label for="typeEncaissement" class="form-label">
+              <i class="ti ti-clock me-2"></i>
+              Type d'encaissement
+            </label>
+            <select 
+              class="form-select" 
+              id="typeEncaissement" 
+              [(ngModel)]="typeEncaissement" 
+              name="typeEncaissement"
+              #typeEncaissementCtrl="ngModel">
+              <option value="">Sélectionner le type</option>
+              <option value="IMMEDIAT">Immédiat</option>
+              <option value="DIFFERE">Différé</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Boutons d'action -->
+        <div class="modal-footer">
+          <button 
+            type="button" 
+            class="btn btn-secondary" 
+            (click)="resetForm()">
+            <i class="ti ti-refresh me-2"></i>
+            Réinitialiser
+          </button>
+          <button 
+            type="submit" 
+            class="btn btn-primary" 
+            [disabled]="!fichierForm.form.valid || !currentUser">
+            <i class="ti ti-plus me-2"></i>
+            {{ currentUser ? 'Ajouter le fichier' : 'Utilisateur non connecté' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

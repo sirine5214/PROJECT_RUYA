@@ -1,0 +1,229 @@
+<div class="profile-container">
+  <!-- Header -->
+  <div class="profile-header">
+    <div class="header-content">
+      <div class="user-avatar">
+        <i class="ti ti-user"></i>
+      </div>
+      <div class="user-info">
+        <h2>{{ currentUser?.username }}</h2>
+        <p class="user-email">{{ currentUser?.email }}</p>
+        <div class="badges">
+          <span class="badge" [ngClass]="getRoleBadgeClass()">
+            <i class="ti" [ngClass]="currentUser?.role === 'ADMIN' ? 'ti-crown' : 'ti-user'"></i>
+            {{ currentUser?.role }}
+          </span>
+          <span class="badge" [ngClass]="getStatusBadgeClass()">
+            <i class="ti" [ngClass]="currentUser?.isActive ? 'ti-check' : 'ti-x'"></i>
+            {{ currentUser?.isActive ? 'Actif' : 'Inactif' }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success/Error Messages -->
+  <div class="alert alert-success" *ngIf="successMessage">
+    <i class="ti ti-check-circle"></i>
+    {{ successMessage }}
+  </div>
+  <div class="alert alert-danger" *ngIf="errorMessage">
+    <i class="ti ti-alert-circle"></i>
+    {{ errorMessage }}
+  </div>
+
+  <!-- Profile Information Card -->
+  <div class="profile-card">
+    <div class="card-header">
+      <h3>
+        <i class="ti ti-user-circle"></i>
+        Informations du profil
+      </h3>
+      <button 
+        class="btn-edit" 
+        (click)="toggleEditMode()"
+        *ngIf="!isEditMode">
+        <i class="ti ti-edit"></i>
+        Modifier
+      </button>
+    </div>
+
+    <div class="card-body">
+      <!-- View Mode -->
+      <div class="profile-info" *ngIf="!isEditMode">
+        <div class="info-row">
+          <div class="info-label">
+            <i class="ti ti-user"></i>
+            Nom d'utilisateur
+          </div>
+          <div class="info-value">{{ currentUser?.username }}</div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">
+            <i class="ti ti-mail"></i>
+            Email
+          </div>
+          <div class="info-value">{{ currentUser?.email }}</div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">
+            <i class="ti ti-shield"></i>
+            Rôle
+          </div>
+          <div class="info-value">{{ currentUser?.role }}</div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">
+            <i class="ti ti-calendar-plus"></i>
+            Date de création
+          </div>
+          <div class="info-value">{{ formatDate(currentUser?.createdAt) }}</div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">
+            <i class="ti ti-calendar-edit"></i>
+            Dernière modification
+          </div>
+          <div class="info-value">{{ formatDate(currentUser?.updatedAt) }}</div>
+        </div>
+      </div>
+
+      <!-- Edit Mode -->
+      <div class="profile-edit" *ngIf="isEditMode">
+        <form #profileForm="ngForm" (ngSubmit)="updateProfile()">
+          <div class="form-group">
+            <label for="username">
+              <i class="ti ti-user"></i>
+              Nom d'utilisateur *
+            </label>
+            <input 
+              type="text" 
+              id="username"
+              [(ngModel)]="editForm.username" 
+              name="username" 
+              required 
+              class="form-control"
+              placeholder="Votre nom d'utilisateur">
+          </div>
+          <div class="form-group">
+            <label for="email">
+              <i class="ti ti-mail"></i>
+              Email *
+            </label>
+            <input 
+              type="email" 
+              id="email"
+              [(ngModel)]="editForm.email" 
+              name="email" 
+              required 
+              class="form-control"
+              placeholder="votre.email@exemple.com">
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn-cancel" (click)="toggleEditMode()">
+              <i class="ti ti-x"></i>
+              Annuler
+            </button>
+            <button 
+              type="submit" 
+              class="btn-save" 
+              [disabled]="!profileForm.form.valid">
+              <i class="ti ti-check"></i>
+              Enregistrer
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Password Change Card -->
+  <div class="profile-card">
+    <div class="card-header">
+      <h3>
+        <i class="ti ti-lock"></i>
+        Sécurité
+      </h3>
+      <button 
+        class="btn-edit" 
+        (click)="togglePasswordChange()"
+        *ngIf="!isChangingPassword">
+        <i class="ti ti-key"></i>
+        Changer le mot de passe
+      </button>
+    </div>
+
+    <div class="card-body">
+      <!-- Password Info -->
+      <div class="password-info" *ngIf="!isChangingPassword">
+        <div class="info-message">
+          <i class="ti ti-info-circle"></i>
+          <p>Pour des raisons de sécurité, nous vous recommandons de changer votre mot de passe régulièrement.</p>
+        </div>
+      </div>
+
+      <!-- Password Change Form -->
+      <div class="password-edit" *ngIf="isChangingPassword">
+        <form #passwordChangeForm="ngForm" (ngSubmit)="changePassword()">
+          <div class="form-group">
+            <label for="currentPassword">
+              <i class="ti ti-lock"></i>
+              Mot de passe actuel *
+            </label>
+            <input 
+              type="password" 
+              id="currentPassword"
+              [(ngModel)]="passwordForm.currentPassword" 
+              name="currentPassword" 
+              required 
+              class="form-control"
+              placeholder="Votre mot de passe actuel">
+          </div>
+          <div class="form-group">
+            <label for="newPassword">
+              <i class="ti ti-lock-plus"></i>
+              Nouveau mot de passe *
+            </label>
+            <input 
+              type="password" 
+              id="newPassword"
+              [(ngModel)]="passwordForm.newPassword" 
+              name="newPassword" 
+              required 
+              minlength="6"
+              class="form-control"
+              placeholder="Minimum 6 caractères">
+            <small class="form-hint">Le mot de passe doit contenir au moins 6 caractères</small>
+          </div>
+          <div class="form-group">
+            <label for="confirmPassword">
+              <i class="ti ti-lock-check"></i>
+              Confirmer le mot de passe *
+            </label>
+            <input 
+              type="password" 
+              id="confirmPassword"
+              [(ngModel)]="passwordForm.confirmPassword" 
+              name="confirmPassword" 
+              required 
+              class="form-control"
+              placeholder="Retapez le nouveau mot de passe">
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn-cancel" (click)="togglePasswordChange()">
+              <i class="ti ti-x"></i>
+              Annuler
+            </button>
+            <button 
+              type="submit" 
+              class="btn-save" 
+              [disabled]="!passwordChangeForm.form.valid">
+              <i class="ti ti-check"></i>
+              Modifier le mot de passe
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

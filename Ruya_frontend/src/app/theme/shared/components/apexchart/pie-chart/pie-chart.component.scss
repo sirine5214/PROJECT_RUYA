@@ -1,0 +1,50 @@
+.card {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  
+  .card-title {
+    display: none; // Masquer le titre car il est maintenant dans le header de la carte parent
+  }
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+.card-title {
+  color: #3a231a;
+  font-weight: 700;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-size: 1.3rem;
+}
+
+// Animation d'entrée
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card {
+  animation: slideInUp 0.6s ease-out;
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .card-body {
+    padding: 1rem;
+  }
+  
+  .card-title {
+    font-size: 1.1rem;
+  }
+} 

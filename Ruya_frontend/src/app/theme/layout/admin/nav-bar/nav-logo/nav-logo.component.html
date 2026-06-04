@@ -1,0 +1,18 @@
+<div class="m-header">
+  <a [routerLink]="['/default/']" class="b-brand d-flex align-items-center" style="padding: 12px 0;">
+    <img src="assets/images/logoAttijari.png" alt="Logo Attijari Bank" class="nav-logo-img" />
+  </a>
+  <div class="pc-h-item">
+    <a
+      href="javascript:"
+      class="pc-head-link head-link-secondary m-0 mobile-menu"
+      [ngClass]="{ on: navCollapsed }"
+      id="sidebar-hide mobile-collapse"
+      (click)="navCollapse()"
+    >
+      <i *ngIf="!navCollapsed" class="ti ti-arrow-left"></i>
+      <i *ngIf="navCollapsed" class="ti ti-arrow-right"></i>
+    </a>
+  </div>
+</div>
+<!-- [ Header ] end -->

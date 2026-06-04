@@ -1,0 +1,251 @@
+<div class="ms-auto">
+  <ul class="list-unstyled">
+    <li class="pc-h-item d-inline-flex align-items-center me-3">
+      <!-- Barre de recherche globale -->
+      <div class="global-search-container">
+        <div class="search-input-wrapper">
+          <input 
+            type="text" 
+            class="form-control global-search-input" 
+            placeholder="Rechercher dans tous les fichiers (chèque, effet, virement, prélèvement)..." 
+            [(ngModel)]="globalSearchTerm"
+            (input)="onGlobalSearchChange()"
+            (focus)="showSearchResults = true"
+            (blur)="onSearchBlur()">
+          <i class="ti ti-search search-icon"></i>
+        </div>
+        
+        <!-- Résultats de recherche -->
+        <div class="search-results-dropdown" *ngIf="showSearchResults && filteredGlobalResults.length > 0">
+          <div class="search-results-header">
+            <span class="results-count">{{ filteredGlobalResults.length }} résultat(s)</span>
+            <button class="btn btn-sm btn-outline-secondary" (click)="clearGlobalSearch()">
+              <i class="ti ti-x"></i>
+            </button>
+          </div>
+          <div class="search-results-list">
+            <div 
+              class="search-result-item" 
+              *ngFor="let result of filteredGlobalResults.slice(0, 5)" 
+              (click)="showFileDetails(result)"
+              title="Cliquer pour voir les détails de ce fichier">
+              <div class="result-icon">
+                <i class="ti" [ngClass]="getFileTypeIcon(result.typeFichier)"></i>
+              </div>
+              <div class="result-content">
+                <div class="result-title">{{ result.nomFichier }}</div>
+                <div class="result-details">
+                  <span class="result-type">{{ result.typeFichier | titlecase }}</span>
+                  <span class="result-code">{{ result.codeValeur }}</span>
+                  <span class="result-sens" [ngClass]="{'result-sens-emis': result.sens === 'Émis', 'result-sens-recu': result.sens === 'Reçu'}">
+                    {{ result.sens }}
+                  </span>
+                </div>
+              </div>
+              <div class="click-indicator">
+                <i class="ti ti-eye"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </li>
+    <li *ngIf="userJson">
+      <div class="dropdown pc-h-item" ngbDropdown>
+        <a
+          class="pc-head-link head-link-secondary dropdown-toggle arrow-none me-0"
+          data-bs-toggle="dropdown"
+          href="javascript:"
+          ngbDropdownToggle
+          (click)="toggleNotifications()"
+          title="Notifications"
+        >
+          <i class="ti ti-bell"></i>
+          <span class="badge bg-danger rounded-pill notification-badge" *ngIf="unreadCount > 0">
+            {{ unreadCount > 9 ? '9+' : unreadCount }}
+          </span>
+        </a>
+        <div class="dropdown-menu dropdown-notification dropdown-menu-end pc-h-dropdown" ngbDropdownMenu [class.show]="showNotifications">
+          <div class="dropdown-header">
+            <a href="javascript:!" class="link-primary float-end text-decoration-underline" (click)="marquerToutesCommeLues()">
+              Marquer comme lues
+            </a>
+            <h5>
+              Notifications
+              <span class="badge bg-warning rounded-pill ms-1" *ngIf="unreadCount > 0">{{ unreadCount }}</span>
+            </h5>
+          </div>
+          <ng-scrollbar style="height: calc(100vh - 215px)" visibility="hover">
+            <div class="dropdown-header px-0 text-wrap">
+              <div class="list-group list-group-flush w-100">
+                <div class="list-group-item" *ngIf="notifications.length === 0">
+                  <div class="text-center text-muted py-3">
+                    <i class="ti ti-bell-off" style="font-size: 2rem;"></i>
+                    <p class="mt-2 mb-0">Aucune notification</p>
+                  </div>
+                </div>
+                            <div
+              class="list-group-item notification-item"
+              *ngFor="let notification of notifications"
+              [class.unread]="!notification.lu"
+              [class.read]="notification.lu">
+              <div class="notification-content">
+                <div class="notification-icon">
+                  <div class="icon-wrapper" [ngClass]="{
+                    'icon-ajout': notification.type === 'AJOUT',
+                    'icon-envoi': notification.type === 'ENVOI',
+                    'icon-reception': notification.type === 'RECEPTION'
+                  }">
+                    <i [class]="notification.icon"></i>
+                  </div>
+                </div>
+                <div class="notification-body">
+                  <div class="notification-header">
+                    <h5 class="notification-title">{{ notification.titre }}</h5>
+                    <span class="notification-time">{{ notificationService.getTimeAgo(notification.timestamp) }}</span>
+                  </div>
+                  <p class="notification-message">{{ notification.message }}</p>
+                  <div class="notification-user" *ngIf="notification.userAction?.username">
+                    <div class="user-info">
+                      <i class="ti ti-user"></i>
+                      <span>{{ notification.userAction.username }}</span>
+                    </div>
+                  </div>
+                  <div class="notification-tags">
+                    <span class="tag" [ngClass]="{
+                      'tag-ajout': notification.type === 'AJOUT',
+                      'tag-envoi': notification.type === 'ENVOI',
+                      'tag-reception': notification.type === 'RECEPTION'
+                    }">
+                      {{ notification.type | titlecase }}
+                    </span>
+                    <span class="tag tag-unread" *ngIf="!notification.lu">Non lue</span>
+                  </div>
+                </div>
+                <div class="notification-actions">
+                  <button
+                    class="action-btn action-read"
+                    (click)="marquerCommeLue(notification)"
+                    title="Marquer comme lue">
+                    <i class="ti ti-check"></i>
+                  </button>
+                  <button
+                    class="action-btn action-view"
+                    (click)="naviguerVersFichierDepuisNotification(notification)"
+                    title="Voir le fichier">
+                    <i class="ti ti-eye"></i>
+                    <span>Voir</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+              </div>
+            </div>
+          </ng-scrollbar>
+          <div class="dropdown-divider"></div>
+          <div class="text-center py-2">
+            <a href="javascript:" class="link-primary" (click)="marquerToutesCommeLues()">
+              Marquer toutes comme lues
+            </a>
+          </div>
+        </div>
+      </div>
+    </li>
+    <li class="pc-h-item d-inline-flex align-items-center ms-3" ngbDropdown>
+      <button class="btn btn-light d-flex align-items-center user-dropdown" ngbDropdownToggle>
+        <i class="ti ti-user me-2"></i>
+        <span class="user-name">{{userJson.username}}</span>
+        <i class="ti ti-chevron-down ms-2"></i>
+      </button>
+      <div class="dropdown-menu dropdown-menu-end" ngbDropdownMenu>
+        <button class="dropdown-item" routerLink="/profile">
+          <i class="ti ti-user-circle me-2"></i> Mon profil
+        </button>
+        <div class="dropdown-divider"></div>
+        <button class="dropdown-item" (click)="onLogout()">
+          <i class="ti ti-logout me-2"></i> Déconnexion
+        </button>
+      </div>
+    </li>
+  </ul>
+</div>
+
+<!-- Popup de détails du fichier -->
+<div class="file-details-overlay" *ngIf="showFileDetailsPopup" (click)="closeFileDetailsPopup()">
+   <div class="file-details-popup" (click)="$event.stopPropagation()">
+     <div class="popup-header">
+       <h4 class="popup-title">
+         <i class="ti" [ngClass]="getFileTypeIcon(selectedFile?.typeFichier || '')"></i>
+         Détails du fichier
+       </h4>
+       <button class="popup-close-btn" (click)="closeFileDetailsPopup()">
+         <i class="ti ti-x"></i>
+       </button>
+     </div>
+     
+     <div class="popup-content" *ngIf="selectedFile">
+       <div class="file-info-grid">
+         <div class="info-item">
+           <label>Nom du fichier</label>
+           <span class="info-value">{{ selectedFile.nomFichier }}</span>
+         </div>
+         
+         <div class="info-item">
+           <label>Type de fichier</label>
+           <span class="info-value badge-type">{{ selectedFile.typeFichier | titlecase }}</span>
+         </div>
+         
+         <div class="info-item">
+           <label>Code EN</label>
+           <span class="info-value">{{ selectedFile.codEn }}</span>
+         </div>
+         
+         <div class="info-item">
+           <label>Code Valeur</label>
+           <span class="info-value badge-code">{{ selectedFile.codeValeur }}</span>
+         </div>
+         
+         <div class="info-item">
+           <label>Nature du fichier</label>
+           <span class="info-value">{{ selectedFile.natureFichier }}</span>
+         </div>
+         
+         <div class="info-item">
+           <label>Sens</label>
+           <span class="info-value badge-sens" [ngClass]="{'badge-sens-emis': selectedFile.sens === 'Émis', 'badge-sens-recu': selectedFile.sens === 'Reçu'}">
+             {{ selectedFile.sens }}
+           </span>
+         </div>
+         
+         <div class="info-item">
+           <label>Montant</label>
+           <span class="info-value">{{ selectedFile.montant || 0 }}</span>
+         </div>
+         
+         <div class="info-item">
+           <label>Nombre</label>
+           <span class="info-value">{{ selectedFile.nomber || 0 }}</span>
+         </div>
+         
+         <div class="info-item">
+           <label>Date de création</label>
+           <span class="info-value">{{ selectedFile.createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+         </div>
+         
+         <div class="info-item">
+           <label>Date de mise à jour</label>
+           <span class="info-value">{{ selectedFile.updatedAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+         </div>
+       </div>
+       
+       <div class="popup-actions">
+         <button class="btn btn-outline-secondary" (click)="closeFileDetailsPopup()">
+           <i class="ti ti-x"></i> Fermer
+         </button>
+         <button class="btn btn-primary" (click)="navigateToFile(selectedFile)">
+           <i class="ti ti-arrow-right"></i> Aller à la page
+         </button>
+       </div>
+     </div>
+   </div>
+ </div>

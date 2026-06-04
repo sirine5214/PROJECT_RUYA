@@ -1,0 +1,45 @@
+<div class="row">
+  <div class="col">
+    <div class="avatar avatar-lg">
+      <i class="text-white ti ti-credit-card"></i>
+    </div>
+  </div>
+  <div class="col-auto">
+    <div class="d-flex align-items-center gap-2 chart-income">
+      <div
+        class="btn btn-sm text-white"
+        [ngClass]="this.btnActive === 'month' ? 'btn-primary' : ''"
+        (click)="toggleActive('month')"
+        tabindex="0"
+        (keydown)="handleKeyDown($event, 'month')"
+      >
+        Mois
+      </div>
+      <div
+        class="btn btn-sm text-white"
+        [ngClass]="this.btnActive === 'year' ? 'btn-primary' : ''"
+        (click)="toggleActive('year')"
+        tabindex="0"
+        (keydown)="handleKeyDown($event, 'year')"
+      >
+        Année
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <!-- Suppression de la colonne montant/texte -->
+  <div class="col-6">
+    <div id="chart text-dark">
+      <apx-chart
+        [series]="chartOptions.series"
+        [chart]="chartOptions.chart"
+        [dataLabels]="chartOptions.dataLabels"
+        [yaxis]="chartOptions.yaxis"
+        [colors]="chartOptions.colors"
+        [stroke]="chartOptions.stroke"
+        [tooltip]="chartOptions.tooltip"
+      ></apx-chart>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,396 @@
+// ============================================
+// 🎨 RUya BROWN THEME - Premium Design System
+// ============================================
+// Date: November 9, 2025
+// Description: Palette de couleurs marron élégante pour l'interface RUya
+// ============================================
+
+// ============================================
+// 🎯 PRIMARY COLORS
+// ============================================
+$header-brown: #8b4513;
+$brown-base: #8b4513;
+$brown-light: #a0521a;
+$brown-dark: #76380f;
+$brown-lighter: #b85f21;
+$brown-darker: #5f2a0b;
+
+// ============================================
+// 🎨 ACCENT COLORS
+// ============================================
+$icon-white: #ffffff;
+$arrow-brown: #6b3410;
+$icon-purple: #6b3410;
+$cream-bg: #faf8f6;
+$warm-white: #fff9f5;
+$brown-shadow: rgba(139, 69, 19, 0.15);
+$brown-hover: rgba(139, 69, 19, 0.08);
+
+// ============================================
+// 🎨 SEMANTIC COLORS
+// ============================================
+$success-green: #5d8b45;
+$danger-red: #c54545;
+$warning-orange: #d97d3a;
+$info-blue: #5d7b8b;
+
+// ============================================
+// 🎯 GRADIENTS
+// ============================================
+$gradient-primary: linear-gradient(135deg, $brown-base 0%, $brown-dark 100%);
+$gradient-light: linear-gradient(135deg, $brown-light 0%, $brown-base 100%);
+$gradient-header: linear-gradient(135deg, $brown-base 0%, $brown-darker 100%);
+$gradient-accent: linear-gradient(90deg, $brown-lighter, $brown-base, $brown-dark);
+$gradient-bg: linear-gradient(to bottom, $warm-white 0%, $cream-bg 100%);
+
+// ============================================
+// 🎨 SHADOWS
+// ============================================
+$shadow-sm: 0 2px 8px rgba(139, 69, 19, 0.1);
+$shadow-md: 0 6px 20px rgba(139, 69, 19, 0.25);
+$shadow-lg: 0 12px 40px rgba(139, 69, 19, 0.35);
+$shadow-xl: 0 25px 80px rgba(139, 69, 19, 0.4);
+
+// ============================================
+// 📐 SPACING
+// ============================================
+$spacing-xs: 0.5rem;   // 8px
+$spacing-sm: 0.75rem;  // 12px
+$spacing-md: 1rem;     // 16px
+$spacing-lg: 1.5rem;   // 24px
+$spacing-xl: 2rem;     // 32px
+$spacing-2xl: 3rem;    // 48px
+
+// ============================================
+// 📐 BORDER RADIUS
+// ============================================
+$radius-sm: 8px;
+$radius-md: 12px;
+$radius-lg: 16px;
+$radius-xl: 20px;
+$radius-2xl: 24px;
+$radius-round: 50%;
+
+// ============================================
+// 🎯 TYPOGRAPHY
+// ============================================
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+$font-weight-extrabold: 800;
+
+$font-size-xs: 0.75rem;    // 12px
+$font-size-sm: 0.85rem;    // 13.6px
+$font-size-base: 0.95rem;  // 15.2px
+$font-size-lg: 1.1rem;     // 17.6px
+$font-size-xl: 1.35rem;    // 21.6px
+$font-size-2xl: 1.75rem;   // 28px
+$font-size-3xl: 2.25rem;   // 36px
+
+// ============================================
+// 🎬 TRANSITIONS
+// ============================================
+$transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+$transition-base: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+$transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+
+// ============================================
+// 🎨 BUTTON STYLES
+// ============================================
+@mixin btn-brown-primary {
+  background: $gradient-primary;
+  color: $icon-white;
+  border: none;
+  box-shadow: $shadow-md;
+  font-weight: $font-weight-bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all $transition-base;
+  
+  &:hover {
+    background: $gradient-light;
+    box-shadow: $shadow-lg;
+    transform: translateY(-3px) scale(1.02);
+  }
+  
+  &:active {
+    transform: translateY(-1px) scale(0.98);
+  }
+}
+
+@mixin btn-brown-secondary {
+  background: rgba(139, 69, 19, 0.1);
+  color: $brown-darker;
+  border: 2px solid $brown-base;
+  font-weight: $font-weight-semibold;
+  transition: all $transition-base;
+  
+  &:hover {
+    background: rgba(139, 69, 19, 0.2);
+    border-color: $brown-dark;
+    transform: translateY(-2px);
+  }
+}
+
+@mixin btn-brown-outline {
+  background: transparent;
+  color: $brown-base;
+  border: 2px solid $brown-base;
+  font-weight: $font-weight-semibold;
+  transition: all $transition-base;
+  
+  &:hover {
+    background: $brown-base;
+    color: $icon-white;
+    transform: translateY(-2px);
+    box-shadow: $shadow-md;
+  }
+}
+
+// ============================================
+// 🎨 CARD STYLES
+// ============================================
+@mixin card-brown {
+  background: $warm-white;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-sm;
+  border: 1px solid rgba(139, 69, 19, 0.1);
+  transition: all $transition-base;
+  
+  &:hover {
+    box-shadow: $shadow-md;
+    transform: translateY(-4px);
+  }
+}
+
+@mixin card-header-brown {
+  background: $gradient-header;
+  color: $icon-white;
+  border-bottom: 3px solid $brown-darker;
+  padding: $spacing-xl;
+  border-radius: $radius-lg $radius-lg 0 0;
+}
+
+// ============================================
+// 🎨 INPUT STYLES
+// ============================================
+@mixin input-brown {
+  border: 2px solid rgba(139, 69, 19, 0.2);
+  border-radius: $radius-md;
+  padding: $spacing-md $spacing-lg;
+  background: $warm-white;
+  color: $brown-darker;
+  font-size: $font-size-base;
+  transition: all $transition-base;
+  
+  &:focus {
+    border-color: $brown-base;
+    box-shadow: 0 0 0 4px $brown-shadow;
+    background: white;
+    outline: none;
+    transform: translateY(-2px);
+  }
+  
+  &:hover:not(:disabled) {
+    border-color: $brown-light;
+    background: white;
+  }
+  
+  &:disabled {
+    background: rgba(139, 69, 19, 0.05);
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+  
+  &::placeholder {
+    color: rgba(139, 69, 19, 0.4);
+  }
+}
+
+// ============================================
+// 🎨 BADGE STYLES
+// ============================================
+@mixin badge-brown {
+  background: $gradient-primary;
+  color: $icon-white;
+  padding: $spacing-xs $spacing-md;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: $shadow-sm;
+}
+
+@mixin badge-brown-outline {
+  background: transparent;
+  color: $brown-base;
+  border: 2px solid $brown-base;
+  padding: $spacing-xs $spacing-md;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+}
+
+// ============================================
+// 🎨 ALERT STYLES
+// ============================================
+@mixin alert-brown {
+  background: rgba(139, 69, 19, 0.1);
+  border-left: 4px solid $brown-base;
+  color: $brown-darker;
+  padding: $spacing-lg;
+  border-radius: $radius-md;
+  box-shadow: $shadow-sm;
+}
+
+@mixin alert-success {
+  background: rgba(93, 139, 69, 0.1);
+  border-left: 4px solid $success-green;
+  color: darken($success-green, 20%);
+}
+
+@mixin alert-danger {
+  background: rgba(197, 69, 69, 0.1);
+  border-left: 4px solid $danger-red;
+  color: darken($danger-red, 15%);
+}
+
+@mixin alert-warning {
+  background: rgba(217, 125, 58, 0.1);
+  border-left: 4px solid $warning-orange;
+  color: darken($warning-orange, 15%);
+}
+
+// ============================================
+// 🎨 TABLE STYLES
+// ============================================
+@mixin table-brown {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: $warm-white;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  box-shadow: $shadow-sm;
+  
+  thead {
+    background: $gradient-header;
+    color: $icon-white;
+    
+    th {
+      padding: $spacing-lg;
+      font-weight: $font-weight-bold;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-size: $font-size-sm;
+      border-bottom: 3px solid $brown-darker;
+    }
+  }
+  
+  tbody {
+    tr {
+      transition: all $transition-base;
+      
+      &:hover {
+        background: $brown-hover;
+        transform: scale(1.01);
+      }
+      
+      &:nth-child(even) {
+        background: rgba(139, 69, 19, 0.02);
+      }
+      
+      td {
+        padding: $spacing-lg;
+        border-bottom: 1px solid rgba(139, 69, 19, 0.1);
+        color: $brown-darker;
+      }
+    }
+  }
+}
+
+// ============================================
+// 🎬 ANIMATIONS
+// ============================================
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+// ============================================
+// 🎨 UTILITY CLASSES
+// ============================================
+.bg-brown { background-color: $brown-base !important; }
+.bg-brown-light { background-color: $brown-light !important; }
+.bg-brown-dark { background-color: $brown-dark !important; }
+.bg-brown-gradient { background: $gradient-primary !important; }
+.bg-cream { background-color: $cream-bg !important; }
+.bg-warm { background-color: $warm-white !important; }
+
+.text-brown { color: $brown-base !important; }
+.text-brown-light { color: $brown-light !important; }
+.text-brown-dark { color: $brown-darker !important; }
+.text-white { color: $icon-white !important; }
+
+.border-brown { border-color: $brown-base !important; }
+.border-brown-light { border-color: $brown-light !important; }
+
+.shadow-brown-sm { box-shadow: $shadow-sm !important; }
+.shadow-brown { box-shadow: $shadow-md !important; }
+.shadow-brown-lg { box-shadow: $shadow-lg !important; }
+.shadow-brown-xl { box-shadow: $shadow-xl !important; }
+
+.rounded-sm { border-radius: $radius-sm !important; }
+.rounded-md { border-radius: $radius-md !important; }
+.rounded-lg { border-radius: $radius-lg !important; }
+.rounded-xl { border-radius: $radius-xl !important; }
+
+// ============================================
+// 📱 RESPONSIVE BREAKPOINTS
+// ============================================
+$breakpoint-xs: 576px;
+$breakpoint-sm: 768px;
+$breakpoint-md: 992px;
+$breakpoint-lg: 1200px;
+$breakpoint-xl: 1400px;
+
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == 'xs' {
+    @media (max-width: $breakpoint-xs) { @content; }
+  }
+  @else if $breakpoint == 'sm' {
+    @media (max-width: $breakpoint-sm) { @content; }
+  }
+  @else if $breakpoint == 'md' {
+    @media (max-width: $breakpoint-md) { @content; }
+  }
+  @else if $breakpoint == 'lg' {
+    @media (max-width: $breakpoint-lg) { @content; }
+  }
+  @else if $breakpoint == 'xl' {
+    @media (max-width: $breakpoint-xl) { @content; }
+  }
+}

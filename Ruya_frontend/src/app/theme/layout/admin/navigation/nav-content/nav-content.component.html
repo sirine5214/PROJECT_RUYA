@@ -1,0 +1,45 @@
+<!-- Vertical layout -->
+<ng-scrollbar style="height: calc(100vh - 70px); width: 100%;" visibility="native" track="both">
+  <div class="navbar-content" style="overflow: auto; min-width: 400px;">
+    <ul class="nav coded-inner-navbar" (click)="fireOutClick()" (keydown.space)="fireOutClick()" (keydown.enter)="fireOutClick()">
+      
+      <!-- Section NAVIGATION -->
+      <li class="nav-item coded-menu-caption">
+        <label>NAVIGATION</label>
+      </li>
+      
+      @for ( item of navigations; track item) {
+        @if (item.title === 'Tableau de bord' || item.title === 'Chèque' || item.title === 'Prélèvement' || item.title === 'Effet' || item.title === 'Virement') {
+          @if (item.type === 'group') {
+            <app-nav-group [item]="item" />
+          } @else if (item.type === 'collapse') {
+            <app-nav-collapse [item]="item" />
+          } @else if (item.type === 'item') {
+            <app-nav-item [item]="item" />
+          }
+        }
+      }
+      
+      <!-- Section GESTION -->
+      <li class="nav-item coded-menu-caption">
+        <label>GESTION</label>
+      </li>
+      
+      @for ( item of navigations; track item) {
+        @if (item.title !== 'Tableau de bord' && item.title !== 'Chèque' && item.title !== 'Prélèvement' && item.title !== 'Effet' && item.title !== 'Virement') {
+          @if (item.type === 'group') {
+            <app-nav-group [item]="item" />
+          } @else if (item.type === 'collapse') {
+            <app-nav-collapse [item]="item" />
+          } @else if (item.type === 'item') {
+            <app-nav-item [item]="item" />
+          }
+        }
+      }
+      
+    </ul>
+    
+    <!-- Bloc Berry Pro supprimé ici -->
+    <!-- Bloc version supprimé ici -->
+  </div>
+</ng-scrollbar>

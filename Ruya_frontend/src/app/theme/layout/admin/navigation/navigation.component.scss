@@ -1,0 +1,1048 @@
+// ===== VARIABLES DE COULEURS =====
+$primary-brown: #78350f;
+$secondary-brown: #451a03;
+$light-brown: #a16207;
+$primary-orange: #fb923c;
+$secondary-orange: #ea580c;
+$accent-orange: #f97316;
+
+// Couleurs de fond
+$bg-cream: #fef7ed;
+$bg-light-orange: #fef3e7;
+$bg-white: #ffffff;
+$bg-slate: #f8fafc;
+
+// Couleurs de texte
+$text-primary: #1e293b;
+$text-secondary: #64748b;
+$text-muted: #94a3b8;
+
+// Ombres et transparences
+$shadow-soft: 0 4px 15px rgba(120, 53, 15, 0.1);
+$shadow-medium: 0 6px 20px rgba(251, 146, 60, 0.4);
+$shadow-strong: 2px 0 20px rgba(120, 53, 15, 0.3);
+
+// ===== MIXINS =====
+@mixin gradient-brown-orange {
+  background: linear-gradient(135deg, $primary-orange 0%, $secondary-orange 100%);
+}
+
+@mixin gradient-dark-brown {
+  background: linear-gradient(145deg, $primary-brown 0%, $secondary-brown 100%);
+}
+
+@mixin transition-smooth {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@mixin transition-fast {
+  transition: all 0.2s ease;
+}
+
+@mixin rounded-right {
+  border-radius: 0 16px 16px 0;
+}
+
+@mixin rounded-right-small {
+  border-radius: 0 12px 12px 0;
+}
+
+@mixin shimmer-effect {
+  position: relative;
+  overflow: hidden;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+    animation: shimmer 2s infinite;
+  }
+}
+
+@mixin light-sweep {
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba($primary-orange, 0.2), transparent);
+    transition: left 0.6s;
+    pointer-events: none;
+    @include rounded-right;
+  }
+  
+  &:hover::after {
+    left: 100%;
+  }
+}
+
+// ===== ANIMATIONS =====
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes badgePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes slideInSidebar {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes itemSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// ===== RESET ET BASE =====
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: $bg-cream;
+  display: flex;
+  min-height: 100vh;
+}
+
+// ===== SIDEBAR PRINCIPALE =====
+.coded-navbar.pc-sidebar {
+  background: linear-gradient(135deg, #a85d3b 0%, #ea580c 50%, #3a231a 100%) !important;
+  border-radius: 0;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  padding: 2rem 1rem;
+  min-height: 100vh;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 10;
+  width: 280px !important;
+  min-width: 280px !important;
+  max-width: 280px !important;
+  
+  // Ligne décorative en haut avec dégradé orange
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #f97316 0%, #ea580c 50%, #a85d3b 100%);
+  }
+  
+  // Texture de fond subtile avec motifs orange
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+      radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(249, 115, 22, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 40% 80%, rgba(234, 88, 12, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+  }
+}
+
+// ===== CONTENU DE LA NAVBAR =====
+.navbar-content {
+  background: transparent !important;
+  padding: 0;
+  min-width: 280px !important;
+  width: 100%;
+}
+
+.coded-inner-navbar {
+  margin-top: 1rem;
+}
+
+.nav-item, .coded-hasmenu {
+  margin-bottom: 0.5rem;
+}
+
+// ===== LOGO =====
+.logo-section {
+  padding: 0 0 24px 0;
+  border-bottom: 1px solid rgba($primary-orange, 0.2);
+  margin-bottom: 1rem;
+  
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 0 18px;
+    
+    &-icon {
+      width: 42px;
+      height: 42px;
+      @include gradient-brown-orange;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 20px;
+      color: white;
+      box-shadow: $shadow-medium;
+      position: relative;
+      
+      &::after {
+        content: '';
+        position: absolute;
+        top: 4px;
+        left: 4px;
+        right: 4px;
+        bottom: 4px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 8px;
+      }
+    }
+    
+    &-text {
+      font-size: 22px;
+      font-weight: 700;
+      color: $primary-orange;
+      text-shadow: 0 2px 4px rgba($primary-orange, 0.2);
+    }
+  }
+}
+
+// ===== ÉLÉMENTS DE NAVIGATION =====
+.nav-item > .nav-link,
+.coded-hasmenu > .nav-link {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border-radius: 0 12px 12px 0;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 12px 16px;
+  border: none;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 0 8px;
+  border-left: 2px solid transparent;
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  user-select: none;
+  justify-content: space-between;
+}
+
+.nav-item > .nav-link::before,
+.coded-hasmenu > .nav-link::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  transition: background 0.3s ease;
+  border-radius: 0 12px 12px 0;
+}
+
+// Flèche indicateur pour les menus collapsibles
+.nav-arrow {
+  font-size: 16px;
+  color: #ffffff;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0.8;
+  margin-left: auto;
+}
+
+// Animation de la flèche quand le menu est ouvert
+.coded-hasmenu.coded-trigger > .nav-link .nav-arrow,
+.coded-hasmenu.active > .nav-link .nav-arrow {
+  transform: rotate(180deg);
+  color: #f97316 !important;
+  opacity: 1;
+}
+
+// Hover sur la flèche
+.coded-hasmenu:not(.active):not(.coded-trigger) > .nav-link:hover .nav-arrow {
+  color: #a85d3b;
+  opacity: 1;
+  transform: translateY(-1px);
+}
+
+// Indicateurs pour les éléments simples
+.nav-item-arrow {
+  font-size: 14px;
+  color: #ffffff;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0 !important;
+  margin-left: auto;
+  transform: translateX(-10px);
+  visibility: hidden;
+}
+
+// Flèche visible seulement sur l'élément actif
+.nav-item.active > .nav-link .nav-item-arrow,
+.nav-item-arrow.active-arrow {
+  opacity: 1 !important;
+  transform: translateX(0);
+  visibility: visible;
+  color: #f97316 !important;
+}
+
+// Hover sur les indicateurs des éléments simples
+.nav-item:not(.active) > .nav-link:hover .nav-item-arrow {
+  color: #a85d3b;
+  opacity: 0.3 !important;
+  transform: translateX(0);
+  visibility: visible;
+}
+
+// État actif pour les indicateurs des éléments simples
+.nav-item.active > .nav-link .nav-item-arrow {
+  color: #f97316 !important;
+  opacity: 1 !important;
+  transform: translateX(2px);
+  visibility: visible;
+}
+
+// Indicateurs spécifiques pour les sous-menus
+.coded-submenu .nav-item .nav-link .nav-item-arrow {
+  font-size: 12px;
+  color: #ffffff;
+  opacity: 0 !important;
+  margin-left: auto;
+  transform: translateX(-8px);
+  visibility: hidden;
+}
+
+// Flèche visible seulement sur l'élément actif dans les sous-menus
+.coded-submenu .nav-item.active > .nav-link .nav-item-arrow,
+.coded-submenu .nav-item-arrow.active-arrow {
+  opacity: 1 !important;
+  transform: translateX(0);
+  visibility: visible;
+  color: #f97316 !important;
+}
+
+// Hover sur les indicateurs des sous-menus
+.coded-submenu .nav-item:not(.active) > .nav-link:hover .nav-item-arrow {
+  color: #a85d3b;
+  opacity: 0.2 !important;
+  transform: translateX(0);
+  visibility: visible;
+}
+
+// État actif pour les indicateurs des sous-menus
+.coded-submenu .nav-item.active > .nav-link .nav-item-arrow {
+  color: #f97316 !important;
+  opacity: 1 !important;
+  transform: translateX(2px);
+  visibility: visible;
+}
+
+// Icônes dans les éléments de navigation
+.coded-micon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+  
+  i {
+    font-size: 16px;
+    color: #ffffff;
+    transition: all 0.3s ease;
+  }
+}
+
+// Icônes spécifiques pour les sous-menus
+.coded-submenu .coded-micon {
+  width: 18px;
+  height: 18px;
+  margin-right: 6px;
+  
+  i {
+    font-size: 14px;
+    color: #ffffff;
+  }
+}
+
+// Hover sur les icônes
+.nav-item:not(.active) > .nav-link:hover .coded-micon i,
+.coded-hasmenu:not(.active):not(.coded-trigger) > .nav-link:hover .coded-micon i {
+  color: #a85d3b;
+  transform: scale(1.1);
+}
+
+// Hover sur les icônes des sous-menus
+.coded-submenu .nav-item:not(.active) > .nav-link:hover .coded-micon i {
+  color: #a85d3b;
+  transform: scale(1.05);
+}
+
+// État actif pour les icônes
+.nav-item.active > .nav-link .coded-micon i,
+.coded-hasmenu.active > .nav-link .coded-micon i,
+.coded-hasmenu.coded-trigger > .nav-link .coded-micon i {
+  color: #ffffff;
+  transform: scale(1.1);
+}
+
+// État actif pour les icônes des sous-menus
+.coded-submenu .nav-item.active > .nav-link .coded-micon i {
+  color: #ffffff;
+  transform: scale(1.05);
+}
+
+// États des liens de navigation - Hover
+.nav-item:not(.active) > .nav-link:hover,
+.coded-hasmenu:not(.active):not(.coded-trigger) > .nav-link:hover {
+  background: rgba(168, 93, 59, 0.3) !important;
+  color: #a85d3b !important;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(168, 93, 59, 0.3);
+  border-left: 2px solid #f97316;
+}
+
+// États actifs - Éléments simples (non-collapsibles)
+.nav-item.active > .nav-link {
+  background: linear-gradient(135deg, #a85d3b 0%, #3a231a 100%) !important;
+  color: #ffffff !important;
+  font-weight: 700;
+  border-radius: 0 12px 12px 0;
+  margin: 0 0 0 8px;
+  box-shadow: 0 4px 12px rgba(168, 93, 59, 0.4);
+  border-left: 2px solid #f97316;
+  backdrop-filter: blur(15px);
+  transform: translateY(-1px);
+  
+  &::before {
+    background: rgba(255, 255, 255, 0.1);
+  }
+}
+
+// États actifs - Menus collapsibles
+.coded-hasmenu.active > .nav-link,
+.coded-hasmenu.coded-trigger > .nav-link {
+  background: linear-gradient(135deg, #a85d3b 0%, #3a231a 100%) !important;
+  color: #ffffff !important;
+  font-weight: 700;
+  border-radius: 0 12px 12px 0;
+  margin: 0 0 0 8px;
+  box-shadow: 0 4px 12px rgba(168, 93, 59, 0.4);
+  border-left: 2px solid #f97316;
+  backdrop-filter: blur(15px);
+  transform: translateY(-1px);
+  
+  &::before {
+    background: rgba(255, 255, 255, 0.1);
+  }
+}
+
+// État par défaut - Tableau de bord (seulement si aucun autre élément n'est actif)
+.nav-item:not(.active) > .nav-link[href="/default/"] {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border-left: 2px solid transparent;
+  
+  &:hover {
+    background: rgba(168, 93, 59, 0.3) !important;
+    color: #a85d3b !important;
+    border-left: 2px solid #f97316;
+  }
+}
+
+// ===== SOUS-MENUS =====
+.coded-submenu {
+  background: rgba(0, 0, 0, 0.2) !important;
+  border-radius: 0 0 12px 0;
+  margin: 0 0 0 8px;
+  padding: 0.5rem 0;
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0;
+  backdrop-filter: blur(10px);
+  
+  .nav-item > .nav-link {
+    background: transparent !important;
+    color: #ffffff !important;
+    border-radius: 0 12px 12px 0;
+    font-weight: 500;
+    margin: 0;
+    padding: 8px 16px;
+    border-left: 1px solid transparent;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    
+    .coded-mtext {
+      color: #ffffff !important;
+      font-weight: 600;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+    
+    &:hover {
+      background: rgba(168, 93, 59, 0.3) !important;
+      color: #a85d3b !important;
+      transform: none;
+      box-shadow: none;
+      border-left: 1px solid #f97316;
+      text-shadow: none;
+      
+      .coded-mtext {
+        color: #a85d3b !important;
+        text-shadow: none;
+      }
+    }
+  }
+}
+
+// Force la couleur blanche pour tous les textes dans les sous-menus
+.coded-submenu .nav-item .nav-link,
+.coded-submenu .nav-item .nav-link .coded-mtext,
+.coded-submenu .nav-item .nav-link span {
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+}
+
+// Règle encore plus spécifique pour forcer la couleur blanche
+.coded-navbar.pc-sidebar .coded-submenu .nav-item .nav-link .coded-mtext,
+.coded-navbar.pc-sidebar .coded-submenu .nav-item .nav-link span,
+.coded-navbar.pc-sidebar .coded-submenu .nav-item .nav-link {
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+}
+
+// Animation pour l'ouverture du sous-menu
+.coded-hasmenu.coded-trigger > .coded-submenu {
+  max-height: 500px;
+  opacity: 1;
+  padding: 0.5rem 0;
+  animation: slideDownSubmenu 0.3s ease-out;
+}
+
+// Animation pour la fermeture du sous-menu
+.coded-submenu:not(.coded-trigger) {
+  max-height: 0;
+  opacity: 0;
+  padding: 0;
+  animation: slideUpSubmenu 0.3s ease-out;
+}
+
+@keyframes slideDownSubmenu {
+  from {
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    max-height: 500px;
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUpSubmenu {
+  from {
+    max-height: 500px;
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+// ===== TITRES DE SECTION =====
+.nav-item.coded-menu-caption {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  
+  label {
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0 16px;
+    background: linear-gradient(135deg, #ffffff 0%, #fef7ed 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    position: relative;
+    display: block;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 3px;
+      height: 16px;
+      background: linear-gradient(135deg, #ffffff 0%, #fef7ed 100%);
+      transform: translateY(-50%);
+      border-radius: 2px;
+    }
+  }
+}
+
+// Premier titre de section (NAVIGATION)
+.nav-item.coded-menu-caption:first-of-type {
+  margin-top: 1rem;
+  
+  label {
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+  }
+}
+
+// ===== ICÔNES ET TEXTE =====
+.nav-link i,
+.nav-link .coded-micon {
+  color: inherit;
+  font-size: 1.1rem;
+  width: 20px;
+  text-align: center;
+}
+
+.nav-link .coded-mtext {
+  color: inherit;
+  font-size: 0.9rem;
+}
+
+// États actifs pour les icônes
+.nav-item.active .nav-link .coded-micon svg,
+.coded-hasmenu.active .nav-link .coded-micon svg,
+.coded-hasmenu.coded-trigger .nav-link .coded-micon svg {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+// ===== BADGES =====
+.badge {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: #ffffff;
+  border-radius: 12px;
+  padding: 2px 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-left: auto;
+}
+
+// ===== SÉPARATEUR =====
+hr {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  margin: 1rem 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+  height: 1px;
+}
+
+// ===== SECTION UTILISATEUR =====
+.user-section {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1rem;
+  background: rgba($primary-brown, 0.2);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba($primary-orange, 0.2);
+  
+  .user-profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    background: rgba($primary-orange, 0.1);
+    border-radius: 16px;
+    border: 1px solid rgba($primary-orange, 0.2);
+    @include transition-smooth;
+    cursor: pointer;
+    
+    &:hover {
+      background: rgba($primary-orange, 0.2);
+      border-color: $primary-orange;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba($primary-orange, 0.3);
+    }
+  }
+  
+  .user-avatar {
+    width: 40px;
+    height: 40px;
+    @include gradient-brown-orange;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+    color: white;
+    box-shadow: 0 4px 12px rgba($primary-orange, 0.4);
+    position: relative;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      right: 2px;
+      bottom: 2px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+    }
+  }
+  
+  .user-info {
+    flex: 1;
+    
+    .user-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: $primary-orange;
+      margin-bottom: 2px;
+    }
+    
+    .user-role {
+      font-size: 12px;
+      color: rgba($primary-orange, 0.7);
+    }
+  }
+}
+
+// ===== CONTENU PRINCIPAL =====
+.main-content {
+  flex: 1;
+  padding: 24px;
+  background: $bg-cream;
+  
+  .content-header {
+    margin-bottom: 24px;
+    
+    .content-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: $primary-brown;
+      margin-bottom: 8px;
+    }
+    
+    .content-subtitle {
+      color: $light-brown;
+      font-size: 16px;
+    }
+  }
+}
+
+// ===== EFFETS SPÉCIAUX =====
+.nav-item,
+.coded-hasmenu {
+  @include light-sweep;
+}
+
+// ===== VERSION CLAIRE (Alternative) =====
+.coded-navbar.pc-sidebar.light-theme {
+  background: $bg-white !important;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  
+  .nav-item > .nav-link,
+  .coded-hasmenu > .nav-link {
+    background: $bg-light-orange;
+    color: #8b4513;
+    @include rounded-right-small;
+    margin: 0 0 0 8px;
+    
+    &:hover {
+      background: #fdecc8;
+      color: #8b4513;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(213, 119, 49, 0.1);
+    }
+  }
+  
+  .nav-item.active > .nav-link,
+  .coded-hasmenu.active > .nav-link,
+  .coded-hasmenu.coded-trigger > .nav-link {
+    background: linear-gradient(135deg, #d97631 0%, #8b4513 100%) !important;
+    color: $bg-white !important;
+    box-shadow: 0 2px 8px rgba(213, 119, 49, 0.2);
+  }
+  
+  .coded-submenu {
+    background: $bg-light-orange !important;
+    
+    .nav-item > .nav-link {
+      background: transparent !important;
+      color: #8b4513 !important;
+      
+      &:hover {
+        background: #fdecc8 !important;
+      }
+    }
+  }
+  
+  .user-section {
+    background: $bg-light-orange;
+    border-top: 1px solid #e0e0e0;
+    
+    .user-profile {
+      background: $bg-white;
+      border: 1px solid #e0e0e0;
+      
+      &:hover {
+        background: #fdecc8;
+        border-color: #d97631;
+      }
+    }
+    
+    .user-name {
+      color: $text-primary;
+    }
+    
+    .user-role {
+      color: $text-secondary;
+    }
+  }
+  
+  .logo-icon {
+    background: linear-gradient(135deg, #d97631 0%, #8b4513 100%);
+    box-shadow: 0 4px 12px rgba(213, 119, 49, 0.3);
+  }
+  
+  .logo-text {
+    color: #8b4513;
+  }
+  
+  .nav-item.coded-menu-caption label {
+    color: #8b4513;
+  }
+  
+  hr {
+    border-top: 1px solid #e0e0e0;
+  }
+}
+
+// ===== RESPONSIVE =====
+@media (max-width: 768px) {
+  .coded-navbar.pc-sidebar {
+    width: 260px !important;
+    min-width: 260px !important;
+    max-width: 260px !important;
+    
+    .logo-section .logo {
+      padding: 0 12px;
+      
+      &-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 18px;
+      }
+      
+      &-text {
+        font-size: 20px;
+      }
+    }
+    
+    .nav-item > .nav-link,
+    .coded-hasmenu > .nav-link {
+      padding: 12px 16px;
+      gap: 12px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .coded-navbar.pc-sidebar {
+    width: 240px !important;
+    min-width: 240px !important;
+    max-width: 240px !important;
+    padding: 1.5rem 0.75rem;
+    
+    .nav-link .coded-mtext {
+      font-size: 0.9rem;
+    }
+  }
+}
+
+// ===== UTILITAIRES =====
+.text-gradient-orange {
+  background: linear-gradient(135deg, $primary-orange 0%, $secondary-orange 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.bg-gradient-brown {
+  @include gradient-dark-brown;
+}
+
+.bg-gradient-orange {
+  @include gradient-brown-orange;
+}
+
+.shadow-orange {
+  box-shadow: $shadow-medium;
+}
+
+.border-orange {
+  border-color: $primary-orange;
+}
+
+// ===== ÉTATS INTERACTIFS GLOBAUX =====
+.interactive-element {
+  @include transition-smooth;
+  cursor: pointer;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow-soft;
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// ===== ANIMATIONS AVANCÉES =====
+.fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ===== THÈME SOMBRE (Bonus) =====
+.coded-navbar.pc-sidebar.dark-theme {
+  @include gradient-dark-brown;
+  
+  .nav-item > .nav-link,
+  .coded-hasmenu > .nav-link {
+    background: rgba($primary-orange, 0.15);
+    color: $primary-orange;
+    
+    &:hover {
+      background: rgba($primary-orange, 0.25);
+      color: lighten($primary-orange, 10%);
+    }
+  }
+  
+  .user-section {
+    background: rgba($secondary-brown, 0.3);
+    
+    .user-profile {
+      background: rgba($primary-orange, 0.1);
+      border-color: rgba($primary-orange, 0.3);
+      
+      &:hover {
+        background: rgba($primary-orange, 0.2);
+      }
+    }
+  }
+}
+
+// Animation d'entrée pour la sidebar
+@keyframes slideInSidebar {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+// Animation pour le contenu de navigation
+@keyframes fadeInNav {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Animation pour les items de navigation au survol
+.coded-inner-navbar {
+  .nav-item, .coded-hasmenu {
+    animation: itemSlideIn 0.4s ease-out;
+    animation-fill-mode: both;
+    
+    @for $i from 1 through 20 {
+      &:nth-child(#{$i}) {
+        animation-delay: #{$i * 0.05}s;
+      }
+    }
+  }
+}
+
+@keyframes itemSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// Effet de focus pour l'accessibilité
+.nav-link:focus {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+  border-radius: 4px;
+  transition: outline 0.2s ease;
+}
+
+// Animation pour le scroll de la sidebar
+ng-scrollbar {
+  transition: all 0.3s ease;
+  
+  &:hover {
+    &::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, #ffffff 0%, #fef7ed 100%);
+      border-radius: 10px;
+    }
+  }
+}

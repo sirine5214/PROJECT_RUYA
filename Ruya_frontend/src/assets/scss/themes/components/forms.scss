@@ -1,0 +1,16 @@
+input, select, textarea {
+  border: 2px solid #FFD600;
+  color: #222;
+  font-family: Arial, sans-serif;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: #E60028;
+  outline: none;
+}
+
+label {
+  color: #222;
+  font-weight: bold;
+  font-family: Arial, sans-serif;
+} 

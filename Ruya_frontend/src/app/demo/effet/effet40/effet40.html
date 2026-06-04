@@ -1,0 +1,291 @@
+<div class="container mt-4">
+  <h2 class="cheque-title">Liste des fichiers - Effet 40</h2>
+  
+  <!-- Barre de recherche et filtres -->
+  <div class="search-filter-container mb-4">
+    <div class="row align-items-center">
+      <div class="col-md-6">
+        <div class="search-input-wrapper">
+          <input 
+            type="text" 
+            class="form-control search-input" 
+            placeholder="Rechercher..." 
+            [(ngModel)]="searchTerm"
+            (input)="onSearchChange()">
+        </div>
+      </div>
+      <div class="col-md-3">
+        <select class="form-select sort-select" [(ngModel)]="sortOrder" (change)="onSortChange()">
+          <option value="all">Tous</option>
+          <option value="recent">Plus récent</option>
+          <option value="oldest">Plus ancien</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <button class="btn btn-outline-secondary filter-btn" (click)="resetFilters()">
+          <i class="ti ti-refresh"></i> Réinitialiser
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Affichage en cartes -->
+  <div class="cards-container">
+    <div class="row">
+      <div class="col-lg-4 col-md-6 col-sm-12 mb-4" 
+           *ngFor="let fichier of filteredFichiers; let i = index"
+           [attr.data-file-id]="fichier.id">
+        <div class="file-card cheque-card-anim" 
+             [style.animationDelay]="(0.1 * i) + 's'">
+          <div class="card-header">
+            <div class="file-icon">
+              <i class="ti ti-file-text"></i>
+            </div>
+            <div class="file-title">
+              <h5>{{ fichier.nomFichier }}</h5>
+              <span class="file-number">Fichier n° {{ fichier.codeValeur }}</span>
+            </div>
+          </div>
+          
+          <div class="card-body">
+            <div class="file-info">
+              <div class="info-row">
+                <span class="info-label">Code EN:</span>
+                <span class="info-value">{{ fichier.codEn }}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Code Valeur:</span>
+                <span class="info-value">{{ fichier.codeValeur }}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Nature:</span>
+                <span class="info-value badge-nature">{{ fichier.natureFichier }}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Type:</span>
+                <span class="info-value badge-type">{{ fichier.typeFichier }}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Sens:</span>
+                <span class="info-value badge" 
+                      [ngClass]="{'badge-sens-emis': fichier.sens === 'Émis', 'badge-sens-recu': fichier.sens === 'Reçu'}">
+                  {{ fichier.sens }}
+                </span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Montant:</span>
+                <span class="info-value amount">{{ fichier.montant || 0 }}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Nombre:</span>
+                <span class="info-value">{{ fichier.nomber || 0 }}</span>
+              </div>
+            </div>
+            
+            <div class="file-dates">
+              <div class="date-info">
+                <i class="ti ti-calendar"></i>
+                <span>Créé: {{ fichier.createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+              </div>
+              <div class="date-info">
+                <i class="ti ti-clock"></i>
+                <span>Modifié: {{ fichier.updatedAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card-actions">
+            <button class="btn btn-modifier" (click)="modifierFichier(fichier)">
+              <i class="ti ti-edit"></i>
+              <span>Modifier</span>
+            </button>
+            <button class="btn btn-supprimer" (click)="supprimerFichier(fichier)">
+              <i class="ti ti-trash"></i>
+              <span>Supprimer</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Backdrop -->
+<div class="modal-backdrop" *ngIf="isEditModalOpen" (click)="onBackdropClick($event)">
+  <!-- Modal Content -->
+  <div class="modal-content" [@modalAnimation]="isEditModalOpen ? 'open' : 'closed'">
+    <!-- Modal Header -->
+    <div class="modal-header">
+      <div class="header-content">
+        <div class="logo-section">
+          <img src="assets/images/logoAttijari.png" alt="Logo Attijari Bank" class="logo" style="height: 40px; width: auto; border-radius: 12px; box-shadow: 0 2px 12px rgba(34,34,34,0.10); background: #fff;" />
+          <div class="title-section">
+            <p class="modal-subtitle">Modifier le fichier dans RU'ya</p>
+          </div>
+        </div>
+        <button type="button" class="close-btn close-btn-right" (click)="fermerEditModal()">
+          <i class="ti ti-x"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="modal-body">
+      <form (ngSubmit)="sauvegarderNomFichier(nomFichierBase)" #editForm="ngForm" class="form-container" *ngIf="fichierSelectionne">
+        <div class="form-grid">
+          <!-- Code Valeur -->
+          <div class="form-group">
+            <label for="codeValeur" class="form-label">
+              <i class="ti ti-hash me-2"></i>
+              Code Valeur
+            </label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="codeValeur" 
+              [value]="fichierSelectionne.codeValeur"
+              readonly>
+          </div>
+
+          <!-- Code EN -->
+          <div class="form-group">
+            <label for="codEn" class="form-label">
+              <i class="ti ti-id me-2"></i>
+              Code EN
+            </label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="codEn" 
+              [value]="fichierSelectionne.codEn"
+              readonly>
+          </div>
+
+          <!-- Nature -->
+          <div class="form-group">
+            <label for="natureFichier" class="form-label">
+              <i class="ti ti-tag me-2"></i>
+              Nature
+            </label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="natureFichier" 
+              [value]="fichierSelectionne.natureFichier"
+              readonly>
+          </div>
+
+          <!-- Type -->
+          <div class="form-group">
+            <label for="typeFichier" class="form-label">
+              <i class="ti ti-category me-2"></i>
+              Type
+            </label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="typeFichier" 
+              [value]="fichierSelectionne.typeFichier"
+              readonly>
+          </div>
+
+          <!-- Sens -->
+          <div class="form-group">
+            <label for="sens" class="form-label">
+              <i class="ti ti-arrow-right-left me-2"></i>
+              Sens
+            </label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="sens" 
+              [value]="fichierSelectionne.sens"
+              readonly>
+          </div>
+
+          <!-- Montant -->
+          <div class="form-group">
+            <label for="montant" class="form-label">
+              <i class="ti ti-currency-dollar me-2"></i>
+              Montant
+            </label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="montant" 
+              [value]="fichierSelectionne.montant || 0"
+              readonly>
+          </div>
+
+          <!-- Nombre -->
+          <div class="form-group">
+            <label for="nomber" class="form-label">
+              <i class="ti ti-arrows-double-ne-sw me-2"></i>
+              Nombre
+            </label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="nomber" 
+              [value]="fichierSelectionne.nomber || 0"
+              readonly>
+          </div>
+
+          <!-- Extension -->
+          <div class="form-group">
+            <label for="extension" class="form-label">
+              <i class="ti ti-file me-2"></i>
+              Extension
+            </label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="extension" 
+              [value]="extensionFichier"
+              readonly>
+          </div>
+
+          <!-- Nom du fichier -->
+          <div class="form-group">
+            <label for="nomFichier" class="form-label">
+              <i class="ti ti-edit me-2"></i>
+              Nom du fichier *
+            </label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="nomFichier" 
+              [(ngModel)]="nomFichierBase" 
+              name="nomFichierEdit" 
+              placeholder="Ex: fichier_effet_40"
+              required
+              pattern="^[a-zA-Z0-9_-]{5,}$"
+              #nomFichierCtrl="ngModel">
+            <div class="text-danger" *ngIf="nomFichierCtrl.invalid && (nomFichierCtrl.dirty || nomFichierCtrl.touched)">
+              <span *ngIf="nomFichierCtrl.errors?.['required']">Le nom du fichier est requis.</span>
+              <span *ngIf="nomFichierCtrl.errors?.['pattern']">Le nom doit comporter au moins 5 caractères (lettres, chiffres, tirets ou underscores).</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Boutons d'action -->
+        <div class="modal-footer">
+          <button 
+            type="button" 
+            class="btn btn-secondary" 
+            (click)="fermerEditModal()">
+            <i class="ti ti-x me-2"></i>
+            Annuler
+          </button>
+          <button 
+            type="submit" 
+            class="btn btn-primary" 
+            [disabled]="!editForm.form.valid">
+            <i class="ti ti-device-floppy me-2"></i>
+            Enregistrer
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
